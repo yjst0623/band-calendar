@@ -242,7 +242,7 @@ const DATA = {
       15:{school:"三者面談", sakura:"休み（★Percのコンメンのみ、AMにレッスンあり）", off:true},
       16:{school:"三者面談／日大相談会", sakura:"13:00〜16:00", baseball:"野球［4回戦］相模原球場11:30開始"},
       17:{school:"三者面談", sakura:"9:00〜14:00", baseball:"野球［5回戦］保土ヶ谷球場11:30開始"},
-      18:{school:"終業式・大掃除", sakura:"野球応援（三）", baseball:"野球［5回戦］保土ヶ谷球場11:30開始（順延分）"},
+      18:{school:"終業式・大掃除", sakura:"野球応援（三）"},
       19:{school:"語学研修（中〜8/3）", sakura:"13:00〜16:00", other:"北田C、厚地C"},
       20:{school:"語学研修（中〜7/30）", sakura:"9:00〜14:00", other:"北田C、Tbレッスン 10:00〜"},
       21:{school:"夏季休暇／［中］特別補習", sakura:"ホール練習　＠寒川町 町民センター（1日練）", hall:true, other:"北田C、金井C"},
@@ -324,7 +324,7 @@ function badgeFor(ev){
   if(ev.contest) return '<span class="badge contest">本番</span>';
   if(ev.camp) return '<span class="badge camp">合宿</span>';
   if(ev.hall) return '<span class="badge hall">ホール練習</span>';
-  if(ev.baseball && !ev.off) return '<span class="badge baseball">野球応援</span>';
+  if(ev.sakura && ev.sakura.includes('野球応援')) return '<span class="badge baseball">野球応援</span>';
   return '';
 }
 
@@ -368,7 +368,9 @@ function openModal(day){
     blocks += `<div class="block ${cls}"><div class="label">桜（高コンメン）の予定</div><div class="txt">${ev.sakura}</div></div>`;
   }
   if(ev.baseball){
-    blocks += `<div class="block"><div class="label">野球応援・大会情報</div><div class="txt">${ev.baseball}</div></div>`;
+    const isCheerDay = ev.sakura && ev.sakura.includes('野球応援');
+    const label = isCheerDay ? '野球応援・大会情報' : '参考：野球部の試合日程（この日、桜は応援ではありません）';
+    blocks += `<div class="block"><div class="label">${label}</div><div class="txt">${ev.baseball}</div></div>`;
   }
   if(ev.other){
     blocks += `<div class="block"><div class="label">担当・備考</div><div class="txt">${ev.other}</div></div>`;
