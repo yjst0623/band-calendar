@@ -14,6 +14,8 @@
     --sakura-deep:#a5486a;
     --brass:#b08d57;
     --brass-deep:#8a6a38;
+    --baseball:#4f7ea8;
+    --baseball-deep:#3c6488;
     --burgundy:#7a2e2e;
     --navy:#233255;
     --leaf:#4f6d4f;
@@ -135,7 +137,7 @@
   .badge.contest{background:var(--burgundy);}
   .badge.camp{background:var(--leaf);}
   .badge.hall{background:var(--brass-deep);}
-  .badge.baseball{background:#c98b4a;}
+  .badge.baseball{background:var(--baseball-deep);}
 
   .overlay{
     position:fixed; inset:0; background: rgba(35,39,51,.45);
@@ -173,6 +175,23 @@
   }
   .block .txt{ font-size: 13.5px; line-height:1.6; color: var(--ink); white-space:pre-line; }
   .empty-msg{ font-family:"Hiragino Kaku Gothic ProN", sans-serif; font-size: 13px; color: var(--ink-soft); text-align:center; padding: 10px 0; }
+  .day-nav{
+    display:flex; justify-content:space-between; gap:8px;
+    margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--line);
+  }
+  .nav-btn{
+    flex:1;
+    font-family:"Hiragino Kaku Gothic ProN", sans-serif;
+    font-size: 13px; font-weight:600;
+    padding: 10px 8px;
+    border-radius: 10px;
+    border: 1.5px solid var(--sakura);
+    background: #fff;
+    color: var(--sakura-deep);
+    cursor:pointer;
+    -webkit-tap-highlight-color: rgba(0,0,0,0.1);
+  }
+  .nav-btn:active{ background: var(--sakura); color:#fff; }
   footer{
     text-align:center; margin-top: 24px; font-family:"Hiragino Kaku Gothic ProN", sans-serif;
     font-size: 11px; color: var(--ink-soft); line-height:1.7;
@@ -184,7 +203,7 @@
   <header>
     <span class="clef">𝄞</span>
     <h1>桜（高コンメン）スケジュール</h1>
-    <div class="sub">2026年7月・8月　※桜（高校コンサートメンバー）の部活動予定を中心に表示</div>
+    <div class="sub">※桜（高校コンサートメンバー）の部活動予定を中心に表示</div>
   </header>
 
   <div class="month-toggle">
@@ -196,7 +215,7 @@
     <span><i class="dot" style="background:var(--burgundy)"></i>コンクール本番</span>
     <span><i class="dot" style="background:var(--leaf)"></i>合宿</span>
     <span><i class="dot" style="background:var(--brass)"></i>ホール練習</span>
-    <span><i class="dot" style="background:#c98b4a"></i>野球応援</span>
+    <span><i class="dot" style="background:var(--baseball)"></i>野球応援</span>
     <span><i class="dot" style="background:var(--ink-soft)"></i>休み</span>
   </div>
 
@@ -208,9 +227,7 @@
   </div>
 
   <footer>
-    ※本カレンダーは「2026_7月予定表」PDFをもとに、桜（高コンメン）の部活動予定を中心にまとめています。<br>
-    学校行事や他グループ（藤・若芽）の予定は、日付をタップすると確認できます。<br>
-    一部、原本の列の対応関係が読み取りにくい箇所があるため、大事な予定は原本PDFもあわせてご確認ください。
+    学校行事や他グループ（藤・若芽）の予定は、日付をタップすると確認できます。
   </footer>
 </div>
 
@@ -241,8 +258,8 @@ const DATA = {
       14:{school:"", sakura:"野球応援（芝・森）", baseball:"野球［3回戦］等々力球場9:00開始"},
       15:{school:"三者面談", sakura:"休み（★Percのコンメンのみ、AMにレッスンあり）", off:true},
       16:{school:"三者面談／日大相談会", sakura:"13:00〜16:00", baseball:"野球［4回戦］相模原球場11:30開始"},
-      17:{school:"三者面談", sakura:"9:00〜14:00", baseball:"野球［5回戦］保土ヶ谷球場11:30開始"},
-      18:{school:"終業式・大掃除", sakura:"野球応援（三）"},
+      17:{school:"三者面談", sakura:"9:00〜14:00"},
+      18:{school:"終業式・大掃除", sakura:"野球応援（三）", baseball:"野球［5回戦］保土ヶ谷球場11:30開始"},
       19:{school:"語学研修（中〜8/3）", sakura:"13:00〜16:00", other:"北田C、厚地C"},
       20:{school:"語学研修（中〜7/30）", sakura:"9:00〜14:00", other:"北田C、Tbレッスン 10:00〜"},
       21:{school:"夏季休暇／［中］特別補習", sakura:"ホール練習　＠寒川町 町民センター（1日練）", hall:true, other:"北田C、金井C"},
@@ -356,7 +373,10 @@ function render(){
 
 const weekdayNames = ['日','月','火','水','木','金','土'];
 
-function openModal(day){
+function openModal(day, month){
+  if(month && month !== currentMonth){
+    setMonth(month);
+  }
   const m = DATA[currentMonth];
   const ev = m.events[day] || {};
   const weekday = (m.startWeekday + day - 1) % 7;
@@ -382,13 +402,33 @@ function openModal(day){
     blocks = `<div class="empty-msg">この日の記載はありません</div>`;
   }
 
+  const prevInfo = getAdjacentDay(currentMonth, day, -1);
+  const nextInfo = getAdjacentDay(currentMonth, day, 1);
+
   modal.innerHTML = `
     <button class="close" onclick="closeModal()">×</button>
     <h2>${currentMonth}月${day}日</h2>
     <div class="wd">${weekdayNames[weekday]}曜日</div>
     ${blocks}
+    <div class="day-nav">
+      <button class="nav-btn" onclick="openModal(${prevInfo.day}, ${prevInfo.month})">← 前の日</button>
+      <button class="nav-btn" onclick="openModal(${nextInfo.day}, ${nextInfo.month})">次の日 →</button>
+    </div>
   `;
   document.getElementById('overlay').classList.add('show');
+}
+
+function getAdjacentDay(month, day, delta){
+  let newDay = day + delta;
+  let newMonth = month;
+  if(newDay < 1){
+    newMonth = 7; // 8月の前は7月のみ想定
+    newDay = DATA[7].days;
+  } else if(newDay > DATA[month].days){
+    newMonth = 8; // 7月の次は8月のみ想定
+    newDay = 1;
+  }
+  return { month: newMonth, day: newDay };
 }
 
 function closeModal(){
