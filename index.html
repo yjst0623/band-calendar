@@ -209,6 +209,7 @@
   <div class="month-toggle">
     <button id="btn7" class="active" onclick="setMonth(7)">7月</button>
     <button id="btn8" onclick="setMonth(8)">8月</button>
+    <button id="btn9" onclick="setMonth(9)">9月</button>
   </div>
 
   <div class="legend">
@@ -279,37 +280,73 @@ const DATA = {
     days: 31,
     startWeekday: 6, // 2026-08-01 = 土曜
     events: {
-      1:{school:"", sakura:"9:00〜12:00"},
+      1:{school:"", sakura:"9:00〜12:00", other:"木管分奏レッスン"},
       2:{school:"〜中2　林間学校", sakura:"休み", off:true},
-      3:{school:"〜中　語学研修", sakura:"9:00〜12:00"},
+      3:{school:"〜中　語学研修", sakura:"9:00〜12:00", other:"金管、Sax、Cl、Flレッスン"},
       4:{school:"", sakura:"9:00〜14:00（合宿準備含む）"},
       5:{school:"", sakura:"合宿1日目（三富荘）\n7:45　学校集合（8:00 トラック配車、8:30 バス配車）", camp:true},
       6:{school:"", sakura:"合宿（三富荘）", camp:true},
       7:{school:"", sakura:"合宿（三富荘）", camp:true},
       8:{school:"", sakura:"合宿最終日（三富荘）\n16:00　学校到着→楽器積み下ろし、17:00頃解散予定", camp:true},
       9:{school:"", sakura:"休み", off:true},
-      10:{school:"", sakura:"ホール練習　＠ひらしん平塚文化芸術ホール（1日練）", hall:true},
-      11:{school:"", sakura:"練習あり"},
-      12:{school:"中学　神奈川県吹奏楽コンクール（横浜みなとみらいホール／若芽＝中Bの本番日）", sakura:"特になし（若芽の本番のため応援可）"},
-      13:{school:"高校　神奈川県吹奏楽コンクール（横浜みなとみらいホール）", sakura:"★コンクール本番　神奈川県吹奏楽コンクール［高B］\n＠横浜みなとみらいホール", contest:true},
+      10:{school:"", sakura:"ホール練習　＠ひらしん平塚文化センター（1日練）", hall:true},
+      11:{school:"", sakura:"9:00〜14:00"},
+      12:{school:"", sakura:"9:00〜14:00"},
+      13:{school:"高校　神奈川県吹奏楽コンクール（横浜みなとみらいホール）", sakura:"★コンクール本番　神奈川県吹奏楽コンクール［高B］\n28番目/33団体　＠横浜みなとみらいホール\nステージ演奏16:20頃", contest:true},
       14:{school:"", sakura:"夏休み", off:true},
       15:{school:"", sakura:"夏休み", off:true},
       16:{school:"", sakura:"夏休み", off:true},
       17:{school:"", sakura:"夏休み", off:true},
-      18:{school:"学校見学ツアー（PM）", sakura:"9:00〜12:00"},
-      19:{school:"学校見学ツアー（AM）", sakura:"9:00〜12:00"},
-      20:{school:"高　特別補習・特進講習・夏季講習、漢字検定", sakura:"14:00〜16:00"},
-      21:{school:"高　特別補習・特進講習・夏季講習", sakura:"14:00〜16:00"},
+      18:{school:"学校見学ツアー（PM）", sakura:"休み", off:true},
+      19:{school:"学校見学ツアー（AM）", sakura:"休み", off:true},
+      20:{school:"高　特別補習・特進講習・夏季講習、漢字検定", sakura:"14:00〜17:00（自主練なし）"},
+      21:{school:"高　特別補習・特進講習・夏季講習", sakura:"14:00〜17:00（自主練なし）"},
       22:{school:"オープンスクール(AM)／学校見学ツアー(PM)", sakura:"休み", off:true},
       23:{school:"", sakura:"休み", off:true},
-      24:{school:"高　特別補習・特進講習・夏季講習", sakura:"14:00〜16:00"},
-      25:{school:"中　特別授業(全員)／高　特別補習・特進講習・夏季講習", sakura:"14:00〜16:00"},
-      26:{school:"中　特別授業(全員)／高　特別補習・特進講習・夏季講習", sakura:"14:00〜16:00"},
-      27:{school:"中　特別授業(全員)／高　特別補習・特進講習・夏季講習", sakura:"14:00〜16:00"},
-      28:{school:"中　特別授業(全員)／高　特別補習・特進講習・夏季講習", sakura:"14:00〜16:00"},
-      29:{school:"中　特別授業(全員)／高　特別補習・特進講習・夏季講習", sakura:"14:00〜16:00"},
+      24:{school:"高　特別補習・特進講習・夏季講習", sakura:"14:00〜17:00（自主練なし）"},
+      25:{school:"中　特別授業(全員)／高　特別補習・特進講習・夏季講習", sakura:"14:00〜17:00（自主練なし）"},
+      26:{school:"中　特別授業(全員)／高　特別補習・特進講習・夏季講習", sakura:"14:00〜17:00（自主練なし）"},
+      27:{school:"中　特別授業(全員)／高　特別補習・特進講習・夏季講習", sakura:"14:00〜17:00（自主練なし）"},
+      28:{school:"中　特別授業(全員)／高　特別補習・特進講習・夏季講習", sakura:"14:00〜17:00（自主練なし）"},
+      29:{school:"中　特別授業(全員)／高　特別補習・特進講習・夏季講習", sakura:"休み（東関東大会進出の場合、コンクールメンバーは練習あり）", off:true},
       30:{school:"", sakura:"休み", off:true},
-      31:{school:"", sakura:"休み", off:true},
+      31:{school:"", sakura:"休み（東関東大会進出の場合、コンクールメンバーは練習あり）", off:true},
+    }
+  },
+  9: {
+    days: 30,
+    startWeekday: 2, // 2026-09-01 = 火曜
+    events: {
+      1:{school:"始業式\n高2，3年小論文テスト", sakura:"練習あり"},
+      2:{school:"実力テスト、基礎学模試", sakura:"練習あり"},
+      3:{school:"", sakura:"休み", off:true},
+      4:{school:"", sakura:"15:50〜18:00"},
+      5:{school:"", sakura:"14:00〜17:00"},
+      6:{school:"", sakura:"休み", off:true},
+      7:{school:"", sakura:"15:50〜18:00"},
+      8:{school:"", sakura:"15:50〜18:00"},
+      9:{school:"", sakura:"休み", off:true},
+      10:{school:"", sakura:"15:50〜18:00"},
+      11:{school:"高校生徒会長・副会長選挙", sakura:"15:50〜18:00"},
+      12:{school:"高2、中3保護者会", sakura:"14:00〜17:00\n★東関東吹奏楽コンクール（進出の場合）\n＠水戸市民会館［高B］", contest:true},
+      13:{school:"", sakura:"休み", off:true},
+      14:{school:"", sakura:"15:50〜18:00"},
+      15:{school:"", sakura:"15:50〜18:00"},
+      16:{school:"", sakura:"15:50〜18:00"},
+      17:{school:"生徒総会", sakura:"休み", off:true},
+      18:{school:"", sakura:"15:50〜18:00"},
+      19:{school:"2限まで授業、大掃除、基礎学準備", sakura:"13:30〜15:30（予定）"},
+      20:{school:"", sakura:"休み", off:true},
+      21:{school:"敬老の日", sakura:"アンコン組練習（午前）"},
+      22:{school:"国民の休日", sakura:"9:00〜12:00"},
+      23:{school:"秋分の日", sakura:"9:00〜12:00"},
+      24:{school:"高3基礎学力テスト", sakura:"休み", off:true},
+      25:{school:"高1高大連携教育", sakura:"15:50〜18:00"},
+      26:{school:"高1講演会、保護者会（午前）、英検1次", sakura:"14:00〜17:00"},
+      27:{school:"", sakura:"アンサンブル＆ソロ発表会"},
+      28:{school:"", sakura:"休み", off:true},
+      29:{school:"", sakura:"15:50〜18:00（高2試験休み）"},
+      30:{school:"", sakura:"15:50〜18:00（高2試験休み）"},
     }
   }
 };
@@ -319,12 +356,13 @@ function getRealToday(){
   return { y: now.getFullYear(), m: now.getMonth()+1, d: now.getDate() };
 }
 const REAL_TODAY = getRealToday();
-let currentMonth = (REAL_TODAY.y===2026 && REAL_TODAY.m===8) ? 8 : 7;
+let currentMonth = (REAL_TODAY.y===2026 && [7,8,9].includes(REAL_TODAY.m)) ? REAL_TODAY.m : 7;
 
 function setMonth(m){
   currentMonth = m;
   document.getElementById('btn7').classList.toggle('active', m===7);
   document.getElementById('btn8').classList.toggle('active', m===8);
+  document.getElementById('btn9').classList.toggle('active', m===9);
   render();
 }
 
@@ -422,10 +460,12 @@ function getAdjacentDay(month, day, delta){
   let newDay = day + delta;
   let newMonth = month;
   if(newDay < 1){
-    newMonth = 7; // 8月の前は7月のみ想定
-    newDay = DATA[7].days;
+    newMonth = month - 1;
+    if(newMonth < 7) newMonth = 9;
+    newDay = DATA[newMonth].days;
   } else if(newDay > DATA[month].days){
-    newMonth = 8; // 7月の次は8月のみ想定
+    newMonth = month + 1;
+    if(newMonth > 9) newMonth = 7;
     newDay = 1;
   }
   return { month: newMonth, day: newDay };
@@ -440,6 +480,7 @@ document.addEventListener('keydown', function(e){
 
 document.getElementById('btn7').classList.toggle('active', currentMonth===7);
 document.getElementById('btn8').classList.toggle('active', currentMonth===8);
+document.getElementById('btn9').classList.toggle('active', currentMonth===9);
 render();
 </script>
 </body>
