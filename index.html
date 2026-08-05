@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>桜（高コンメン）スケジュール 2026</title>
+<title>美織・春馬 スケジュール 2026</title>
 <style>
   :root{
     --paper:#f6f3ec;
@@ -36,7 +36,7 @@
     padding: 20px 10px 50px;
   }
   .wrap{max-width:920px;margin:0 auto; width:100%;}
-  header{ text-align:center; margin-bottom: 18px; }
+  header{ text-align:center; margin-bottom: 14px; }
   header .clef{
     font-size: 34px; color: var(--sakura-deep); display:block; margin-bottom:2px;
   }
@@ -48,8 +48,18 @@
     font-family: "Hiragino Kaku Gothic ProN", sans-serif;
     font-size: 12.5px; color: var(--ink-soft); margin-top: 6px;
   }
-  .month-toggle{
+  .person-toggle{
     display:flex; justify-content:center; gap:10px; margin: 18px 0 14px;
+    font-family: "Hiragino Kaku Gothic ProN", sans-serif;
+  }
+  .person-toggle button{
+    border: 1.5px solid var(--navy); background: var(--card); color: var(--navy);
+    padding: 9px 20px; border-radius: 999px; font-size: 14.5px; font-weight:700;
+    cursor:pointer; transition: all .15s ease;
+  }
+  .person-toggle button.active{ background: var(--navy); border-color: var(--navy); color: #fff; }
+  .month-toggle{
+    display:flex; justify-content:center; gap:10px; margin: 0 0 14px;
     font-family: "Hiragino Kaku Gothic ProN", sans-serif;
   }
   .month-toggle button{
@@ -134,9 +144,11 @@
   .day.contest{ background: linear-gradient(180deg,#fbeceb,#fffdf9 60%); border-color: var(--burgundy); }
   .day.camp{ background: linear-gradient(180deg,#eef3ec,#fffdf9 60%); border-color: var(--leaf); }
   .day.hall{ background: linear-gradient(180deg,#fbf3e3,#fffdf9 60%); border-color: var(--brass); }
+  .day.optional{ background: linear-gradient(180deg,#fbf3e3,#fffdf9 60%); border-color: var(--brass); }
   .badge.contest{background:var(--burgundy);}
   .badge.camp{background:var(--leaf);}
   .badge.hall{background:var(--brass-deep);}
+  .badge.optional{background:var(--brass-deep);}
   .badge.baseball{background:var(--baseball-deep);}
 
   .overlay{
@@ -168,6 +180,7 @@
   .block.contest{ border-left-color: var(--burgundy); background:#fbf0ef; }
   .block.camp{ border-left-color: var(--leaf); background:#f1f5ef; }
   .block.hall{ border-left-color: var(--brass); background:#fbf3e3; }
+  .block.optional{ border-left-color: var(--brass); background:#fbf3e3; }
   .block.school{ border-left-color: var(--navy); background:#eef1f7; }
   .block .label{
     font-size: 10.5px; font-weight:700; letter-spacing:.05em; color: var(--ink-soft);
@@ -202,23 +215,18 @@
 <div class="wrap">
   <header>
     <span class="clef">𝄞</span>
-    <h1>桜（高コンメン）スケジュール</h1>
-    <div class="sub">※桜（高校コンサートメンバー）の部活動予定を中心に表示</div>
+    <h1 id="pageTitle">桜（高コンメン）スケジュール</h1>
+    <div class="sub" id="pageSubtitle">※桜（高校コンサートメンバー）の部活動予定を中心に表示</div>
   </header>
 
-  <div class="month-toggle">
-    <button id="btn7" class="active" onclick="setMonth(7)">7月</button>
-    <button id="btn8" onclick="setMonth(8)">8月</button>
-    <button id="btn9" onclick="setMonth(9)">9月</button>
+  <div class="person-toggle">
+    <button id="pbtn-miori" class="active" onclick="setPerson('miori')">姉：美織（吹奏楽部）</button>
+    <button id="pbtn-haruma" onclick="setPerson('haruma')">弟：春馬（塾）</button>
   </div>
 
-  <div class="legend">
-    <span><i class="dot" style="background:var(--burgundy)"></i>コンクール本番</span>
-    <span><i class="dot" style="background:var(--leaf)"></i>合宿</span>
-    <span><i class="dot" style="background:var(--brass)"></i>ホール練習</span>
-    <span><i class="dot" style="background:var(--baseball)"></i>野球応援</span>
-    <span><i class="dot" style="background:var(--ink-soft)"></i>休み</span>
-  </div>
+  <div class="month-toggle" id="monthToggle"></div>
+
+  <div class="legend" id="legend"></div>
 
   <div class="grid">
     <div class="weekdays">
@@ -227,7 +235,7 @@
     <div class="days" id="days"></div>
   </div>
 
-  <footer>
+  <footer id="pageFooter">
     学校行事や他グループ（藤・若芽）の予定は、日付をタップすると確認できます。
   </footer>
 </div>
@@ -237,116 +245,171 @@
 </div>
 
 <script>
-// すべて 桜（高コンメン）視点でまとめたデータ
-const DATA = {
-  7: {
-    days: 31,
-    startWeekday: 3, // 2026-07-01 = 水曜
-    events: {
-      1:{school:"", sakura:"試験休み", off:true},
-      2:{school:"", sakura:"試験休み", off:true},
-      3:{school:"期末試験", sakura:"試験休み", off:true},
-      4:{school:"期末試験", sakura:"試験休み", off:true},
-      5:{school:"", sakura:"休み", off:true},
-      6:{school:"期末試験", sakura:"試験休み", off:true},
-      7:{school:"期末試験／語学研修説明会", sakura:"12:30〜15:30"},
-      8:{school:"［高］実力テスト　高1〜12:50頃／高2〜14:20頃", sakura:"14:30〜17:00（高2はHRが終わり次第参加）\n★16〜17時応援の合同練習＠中講堂"},
-      9:{school:"", sakura:"休み（自主練可 9:00〜12:00）", off:true},
-      10:{school:"答案返却日、中1講演会〜12:30頃", sakura:"11:30〜15:30（12:30〜13:30はお昼）", other:"レッスン：Euph＋Tub 13:30〜／Hr(新保さん) PM／Ob 13:30〜"},
-      11:{school:"［高］特進プログラム　高1 9:30〜12:00？、高2 13:00〜15:30？", sakura:"15:30〜17:30（13:00〜自主練可）", other:"北田C、金井C、厚地C、Flレッスン PM", baseball:"野球［2回戦］相模原球場9:00開始→吹部応援なし"},
-      12:{school:"", sakura:"合同練習（AMのみ）", other:"金井C（大庭中学校・御所見中学校）＠中講堂"},
-      13:{school:"", sakura:"13:00〜16:00", other:"Cbレッスン 12:30〜15:30"},
-      14:{school:"", sakura:"野球応援（芝・森）", baseball:"野球［3回戦］等々力球場9:00開始"},
-      15:{school:"三者面談", sakura:"休み（★Percのコンメンのみ、AMにレッスンあり）", off:true},
-      16:{school:"三者面談／日大相談会", sakura:"13:00〜16:00", baseball:"野球［4回戦］相模原球場11:30開始"},
-      17:{school:"三者面談", sakura:"9:00〜14:00"},
-      18:{school:"終業式・大掃除", sakura:"野球応援（三）", baseball:"野球［5回戦］保土ヶ谷球場11:30開始"},
-      19:{school:"語学研修（中〜8/3）", sakura:"13:00〜16:00", other:"北田C、厚地C"},
-      20:{school:"語学研修（中〜7/30）", sakura:"9:00〜14:00", other:"北田C、Tbレッスン 10:00〜"},
-      21:{school:"夏季休暇／［中］特別補習", sakura:"ホール練習　＠寒川町 町民センター（1日練）", hall:true, other:"北田C、金井C"},
-      22:{school:"［中］特別補習", sakura:"9:00〜14:00", baseball:"野球［準々決勝］横浜スタジアム11:30開始"},
-      23:{school:"［中］特別補習", sakura:"★コンクール本番　湘南吹奏楽コンクール［高B］\n2番目/9団体　＠茅ヶ崎市民文化会館\nステージ演奏14:41頃／開場14:00・開演14:30\n表彰16:54〜17:09（搬入13:36〜13:56、誘導開始14:21、ステージ袖14:36）", contest:true, other:"北田C、金井C"},
-      24:{school:"［中］特別補習", sakura:"コンクール補助役員あり（20名）／野球応援", baseball:"野球［準決勝］横浜スタジアム11:30開始"},
-      25:{school:"AMオープンスクール", sakura:"補助役員あり（10名）／中Bコンクール鑑賞", other:"北田C、金井C、厚地C（若芽＝中Bはこの日コンクール本番）"},
-      26:{school:"", sakura:"野球応援／休み", off:true, baseball:"野球［決勝］横浜スタジアム14:00開始"},
-      27:{school:"［中］特別補習", sakura:"休み", off:true},
-      28:{school:"", sakura:"休み", off:true},
-      29:{school:"中2　登校日", sakura:"休み", off:true},
-      30:{school:"中2　林間学校（〜8/2）", sakura:"9:00〜12:00（県大会がある場合）／休み"},
-      31:{school:"", sakura:"9:00〜12:00（県大会がある場合）／休み"},
+// 人物ごとにデータ・見た目のラベルをまとめる
+const PEOPLE = {
+  miori: {
+    title: '桜（高コンメン）スケジュール',
+    subtitle: '※桜（高校コンサートメンバー）の部活動予定を中心に表示',
+    footer: '学校行事や他グループ（藤・若芽）の予定は、日付をタップすると確認できます。',
+    scheduleLabel: '桜（高コンメン）の予定',
+    otherLabel: '担当・備考',
+    schoolLabel: '学校行事',
+    legend: [
+      {color:'var(--burgundy)', text:'コンクール本番'},
+      {color:'var(--leaf)', text:'合宿'},
+      {color:'var(--brass)', text:'ホール練習'},
+      {color:'var(--baseball)', text:'野球応援'},
+      {color:'var(--ink-soft)', text:'休み'},
+    ],
+    months: [7,8,9],
+    monthLabels: {7:'7月',8:'8月',9:'9月'},
+    data: {
+      7: {
+        days: 31,
+        startWeekday: 3, // 2026-07-01 = 水曜
+        events: {
+          1:{school:"", sakura:"試験休み", off:true},
+          2:{school:"", sakura:"試験休み", off:true},
+          3:{school:"期末試験", sakura:"試験休み", off:true},
+          4:{school:"期末試験", sakura:"試験休み", off:true},
+          5:{school:"", sakura:"休み", off:true},
+          6:{school:"期末試験", sakura:"試験休み", off:true},
+          7:{school:"期末試験／語学研修説明会", sakura:"12:30〜15:30"},
+          8:{school:"［高］実力テスト　高1〜12:50頃／高2〜14:20頃", sakura:"14:30〜17:00（高2はHRが終わり次第参加）\n★16〜17時応援の合同練習＠中講堂"},
+          9:{school:"", sakura:"休み（自主練可 9:00〜12:00）", off:true},
+          10:{school:"答案返却日、中1講演会〜12:30頃", sakura:"11:30〜15:30（12:30〜13:30はお昼）", other:"レッスン：Euph＋Tub 13:30〜／Hr(新保さん) PM／Ob 13:30〜"},
+          11:{school:"［高］特進プログラム　高1 9:30〜12:00？、高2 13:00〜15:30？", sakura:"15:30〜17:30（13:00〜自主練可）", other:"北田C、金井C、厚地C、Flレッスン PM", baseball:"野球［2回戦］相模原球場9:00開始→吹部応援なし"},
+          12:{school:"", sakura:"合同練習（AMのみ）", other:"金井C（大庭中学校・御所見中学校）＠中講堂"},
+          13:{school:"", sakura:"13:00〜16:00", other:"Cbレッスン 12:30〜15:30"},
+          14:{school:"", sakura:"野球応援（芝・森）", baseball:"野球［3回戦］等々力球場9:00開始"},
+          15:{school:"三者面談", sakura:"休み（★Percのコンメンのみ、AMにレッスンあり）", off:true},
+          16:{school:"三者面談／日大相談会", sakura:"13:00〜16:00", baseball:"野球［4回戦］相模原球場11:30開始"},
+          17:{school:"三者面談", sakura:"9:00〜14:00"},
+          18:{school:"終業式・大掃除", sakura:"野球応援（三）", baseball:"野球［5回戦］保土ヶ谷球場11:30開始"},
+          19:{school:"語学研修（中〜8/3）", sakura:"13:00〜16:00", other:"北田C、厚地C"},
+          20:{school:"語学研修（中〜7/30）", sakura:"9:00〜14:00", other:"北田C、Tbレッスン 10:00〜"},
+          21:{school:"夏季休暇／［中］特別補習", sakura:"ホール練習　＠寒川町 町民センター（1日練）", hall:true, other:"北田C、金井C"},
+          22:{school:"［中］特別補習", sakura:"9:00〜14:00", baseball:"野球［準々決勝］横浜スタジアム11:30開始"},
+          23:{school:"［中］特別補習", sakura:"★コンクール本番　湘南吹奏楽コンクール［高B］\n2番目/9団体　＠茅ヶ崎市民文化会館\nステージ演奏14:41頃／開場14:00・開演14:30\n表彰16:54〜17:09（搬入13:36〜13:56、誘導開始14:21、ステージ袖14:36）", contest:true, other:"北田C、金井C"},
+          24:{school:"［中］特別補習", sakura:"コンクール補助役員あり（20名）／野球応援", baseball:"野球［準決勝］横浜スタジアム11:30開始"},
+          25:{school:"AMオープンスクール", sakura:"補助役員あり（10名）／中Bコンクール鑑賞", other:"北田C、金井C、厚地C（若芽＝中Bはこの日コンクール本番）"},
+          26:{school:"", sakura:"野球応援／休み", off:true, baseball:"野球［決勝］横浜スタジアム14:00開始"},
+          27:{school:"［中］特別補習", sakura:"休み", off:true},
+          28:{school:"", sakura:"休み", off:true},
+          29:{school:"中2　登校日", sakura:"休み", off:true},
+          30:{school:"中2　林間学校（〜8/2）", sakura:"9:00〜12:00（県大会がある場合）／休み"},
+          31:{school:"", sakura:"9:00〜12:00（県大会がある場合）／休み"},
+        }
+      },
+      8: {
+        days: 31,
+        startWeekday: 6, // 2026-08-01 = 土曜
+        events: {
+          1:{school:"", sakura:"9:00〜12:00", other:"木管分奏レッスン"},
+          2:{school:"〜中2　林間学校", sakura:"休み", off:true},
+          3:{school:"〜中　語学研修", sakura:"9:00〜12:00", other:"金管、Sax、Cl、Flレッスン"},
+          4:{school:"", sakura:"9:00〜14:00（合宿準備含む）"},
+          5:{school:"", sakura:"合宿1日目（三富荘）\n7:45　学校集合（8:00 トラック配車、8:30 バス配車）", camp:true},
+          6:{school:"", sakura:"合宿（三富荘）", camp:true},
+          7:{school:"", sakura:"合宿（三富荘）", camp:true},
+          8:{school:"", sakura:"合宿最終日（三富荘）\n16:00　学校到着→楽器積み下ろし、17:00頃解散予定", camp:true},
+          9:{school:"", sakura:"休み", off:true},
+          10:{school:"", sakura:"ホール練習　＠ひらしん平塚文化センター（1日練）", hall:true},
+          11:{school:"", sakura:"9:00〜14:00"},
+          12:{school:"", sakura:"9:00〜14:00"},
+          13:{school:"高校　神奈川県吹奏楽コンクール（横浜みなとみらいホール）", sakura:"★コンクール本番　神奈川県吹奏楽コンクール［高B］\n28番目/33団体　＠横浜みなとみらいホール\nステージ演奏16:20頃", contest:true},
+          14:{school:"", sakura:"夏休み", off:true},
+          15:{school:"", sakura:"夏休み", off:true},
+          16:{school:"", sakura:"夏休み", off:true},
+          17:{school:"", sakura:"夏休み", off:true},
+          18:{school:"学校見学ツアー（PM）", sakura:"休み", off:true},
+          19:{school:"学校見学ツアー（AM）", sakura:"休み", off:true},
+          20:{school:"高　特別補習・特進講習・夏季講習、漢字検定", sakura:"14:00〜17:00（自主練なし）"},
+          21:{school:"高　特別補習・特進講習・夏季講習", sakura:"14:00〜17:00（自主練なし）"},
+          22:{school:"オープンスクール(AM)／学校見学ツアー(PM)", sakura:"休み", off:true},
+          23:{school:"", sakura:"休み", off:true},
+          24:{school:"高　特別補習・特進講習・夏季講習", sakura:"14:00〜17:00（自主練なし）"},
+          25:{school:"中　特別授業(全員)／高　特別補習・特進講習・夏季講習", sakura:"14:00〜17:00（自主練なし）"},
+          26:{school:"中　特別授業(全員)／高　特別補習・特進講習・夏季講習", sakura:"14:00〜17:00（自主練なし）"},
+          27:{school:"中　特別授業(全員)／高　特別補習・特進講習・夏季講習", sakura:"14:00〜17:00（自主練なし）"},
+          28:{school:"中　特別授業(全員)／高　特別補習・特進講習・夏季講習", sakura:"14:00〜17:00（自主練なし）"},
+          29:{school:"中　特別授業(全員)／高　特別補習・特進講習・夏季講習", sakura:"休み（東関東大会進出の場合、コンクールメンバーは練習あり）", off:true},
+          30:{school:"", sakura:"休み", off:true},
+          31:{school:"", sakura:"休み（東関東大会進出の場合、コンクールメンバーは練習あり）", off:true},
+        }
+      },
+      9: {
+        days: 30,
+        startWeekday: 2, // 2026-09-01 = 火曜
+        events: {
+          1:{school:"始業式\n高2，3年小論文テスト", sakura:"練習あり"},
+          2:{school:"実力テスト、基礎学模試", sakura:"練習あり"},
+          3:{school:"", sakura:"休み", off:true},
+          4:{school:"", sakura:"15:50〜18:00"},
+          5:{school:"", sakura:"14:00〜17:00"},
+          6:{school:"", sakura:"休み", off:true},
+          7:{school:"", sakura:"15:50〜18:00"},
+          8:{school:"", sakura:"15:50〜18:00"},
+          9:{school:"", sakura:"休み", off:true},
+          10:{school:"", sakura:"15:50〜18:00"},
+          11:{school:"高校生徒会長・副会長選挙", sakura:"15:50〜18:00"},
+          12:{school:"高2、中3保護者会", sakura:"14:00〜17:00\n★東関東吹奏楽コンクール（進出の場合）\n＠水戸市民会館［高B］", contest:true},
+          13:{school:"", sakura:"休み", off:true},
+          14:{school:"", sakura:"15:50〜18:00"},
+          15:{school:"", sakura:"15:50〜18:00"},
+          16:{school:"", sakura:"15:50〜18:00"},
+          17:{school:"生徒総会", sakura:"休み", off:true},
+          18:{school:"", sakura:"15:50〜18:00"},
+          19:{school:"2限まで授業、大掃除、基礎学準備", sakura:"13:30〜15:30（予定）"},
+          20:{school:"", sakura:"休み", off:true},
+          21:{school:"敬老の日", sakura:"アンコン組練習（午前）"},
+          22:{school:"国民の休日", sakura:"9:00〜12:00"},
+          23:{school:"秋分の日", sakura:"9:00〜12:00"},
+          24:{school:"高3基礎学力テスト", sakura:"休み", off:true},
+          25:{school:"高1高大連携教育", sakura:"15:50〜18:00"},
+          26:{school:"高1講演会、保護者会（午前）、英検1次", sakura:"14:00〜17:00"},
+          27:{school:"", sakura:"アンサンブル＆ソロ発表会"},
+          28:{school:"", sakura:"休み", off:true},
+          29:{school:"", sakura:"15:50〜18:00（高2試験休み）"},
+          30:{school:"", sakura:"15:50〜18:00（高2試験休み）"},
+        }
+      }
     }
   },
-  8: {
-    days: 31,
-    startWeekday: 6, // 2026-08-01 = 土曜
-    events: {
-      1:{school:"", sakura:"9:00〜12:00", other:"木管分奏レッスン"},
-      2:{school:"〜中2　林間学校", sakura:"休み", off:true},
-      3:{school:"〜中　語学研修", sakura:"9:00〜12:00", other:"金管、Sax、Cl、Flレッスン"},
-      4:{school:"", sakura:"9:00〜14:00（合宿準備含む）"},
-      5:{school:"", sakura:"合宿1日目（三富荘）\n7:45　学校集合（8:00 トラック配車、8:30 バス配車）", camp:true},
-      6:{school:"", sakura:"合宿（三富荘）", camp:true},
-      7:{school:"", sakura:"合宿（三富荘）", camp:true},
-      8:{school:"", sakura:"合宿最終日（三富荘）\n16:00　学校到着→楽器積み下ろし、17:00頃解散予定", camp:true},
-      9:{school:"", sakura:"休み", off:true},
-      10:{school:"", sakura:"ホール練習　＠ひらしん平塚文化センター（1日練）", hall:true},
-      11:{school:"", sakura:"9:00〜14:00"},
-      12:{school:"", sakura:"9:00〜14:00"},
-      13:{school:"高校　神奈川県吹奏楽コンクール（横浜みなとみらいホール）", sakura:"★コンクール本番　神奈川県吹奏楽コンクール［高B］\n28番目/33団体　＠横浜みなとみらいホール\nステージ演奏16:20頃", contest:true},
-      14:{school:"", sakura:"夏休み", off:true},
-      15:{school:"", sakura:"夏休み", off:true},
-      16:{school:"", sakura:"夏休み", off:true},
-      17:{school:"", sakura:"夏休み", off:true},
-      18:{school:"学校見学ツアー（PM）", sakura:"休み", off:true},
-      19:{school:"学校見学ツアー（AM）", sakura:"休み", off:true},
-      20:{school:"高　特別補習・特進講習・夏季講習、漢字検定", sakura:"14:00〜17:00（自主練なし）"},
-      21:{school:"高　特別補習・特進講習・夏季講習", sakura:"14:00〜17:00（自主練なし）"},
-      22:{school:"オープンスクール(AM)／学校見学ツアー(PM)", sakura:"休み", off:true},
-      23:{school:"", sakura:"休み", off:true},
-      24:{school:"高　特別補習・特進講習・夏季講習", sakura:"14:00〜17:00（自主練なし）"},
-      25:{school:"中　特別授業(全員)／高　特別補習・特進講習・夏季講習", sakura:"14:00〜17:00（自主練なし）"},
-      26:{school:"中　特別授業(全員)／高　特別補習・特進講習・夏季講習", sakura:"14:00〜17:00（自主練なし）"},
-      27:{school:"中　特別授業(全員)／高　特別補習・特進講習・夏季講習", sakura:"14:00〜17:00（自主練なし）"},
-      28:{school:"中　特別授業(全員)／高　特別補習・特進講習・夏季講習", sakura:"14:00〜17:00（自主練なし）"},
-      29:{school:"中　特別授業(全員)／高　特別補習・特進講習・夏季講習", sakura:"休み（東関東大会進出の場合、コンクールメンバーは練習あり）", off:true},
-      30:{school:"", sakura:"休み", off:true},
-      31:{school:"", sakura:"休み（東関東大会進出の場合、コンクールメンバーは練習あり）", off:true},
-    }
-  },
-  9: {
-    days: 30,
-    startWeekday: 2, // 2026-09-01 = 火曜
-    events: {
-      1:{school:"始業式\n高2，3年小論文テスト", sakura:"練習あり"},
-      2:{school:"実力テスト、基礎学模試", sakura:"練習あり"},
-      3:{school:"", sakura:"休み", off:true},
-      4:{school:"", sakura:"15:50〜18:00"},
-      5:{school:"", sakura:"14:00〜17:00"},
-      6:{school:"", sakura:"休み", off:true},
-      7:{school:"", sakura:"15:50〜18:00"},
-      8:{school:"", sakura:"15:50〜18:00"},
-      9:{school:"", sakura:"休み", off:true},
-      10:{school:"", sakura:"15:50〜18:00"},
-      11:{school:"高校生徒会長・副会長選挙", sakura:"15:50〜18:00"},
-      12:{school:"高2、中3保護者会", sakura:"14:00〜17:00\n★東関東吹奏楽コンクール（進出の場合）\n＠水戸市民会館［高B］", contest:true},
-      13:{school:"", sakura:"休み", off:true},
-      14:{school:"", sakura:"15:50〜18:00"},
-      15:{school:"", sakura:"15:50〜18:00"},
-      16:{school:"", sakura:"15:50〜18:00"},
-      17:{school:"生徒総会", sakura:"休み", off:true},
-      18:{school:"", sakura:"15:50〜18:00"},
-      19:{school:"2限まで授業、大掃除、基礎学準備", sakura:"13:30〜15:30（予定）"},
-      20:{school:"", sakura:"休み", off:true},
-      21:{school:"敬老の日", sakura:"アンコン組練習（午前）"},
-      22:{school:"国民の休日", sakura:"9:00〜12:00"},
-      23:{school:"秋分の日", sakura:"9:00〜12:00"},
-      24:{school:"高3基礎学力テスト", sakura:"休み", off:true},
-      25:{school:"高1高大連携教育", sakura:"15:50〜18:00"},
-      26:{school:"高1講演会、保護者会（午前）、英検1次", sakura:"14:00〜17:00"},
-      27:{school:"", sakura:"アンサンブル＆ソロ発表会"},
-      28:{school:"", sakura:"休み", off:true},
-      29:{school:"", sakura:"15:50〜18:00（高2試験休み）"},
-      30:{school:"", sakura:"15:50〜18:00（高2試験休み）"},
+  haruma: {
+    title: '春馬　塾スケジュール（中1）',
+    subtitle: '※中1（中1・2合同クラス）の授業のみ掲載。他の学年・講座は表示していません',
+    footer: '塾から配信される「今週の通塾予定」をもとに随時更新します。日付をタップすると詳細を確認できます。',
+    scheduleLabel: '春馬（塾）の予定',
+    otherLabel: '備考',
+    schoolLabel: '学校行事',
+    legend: [
+      {color:'var(--brass)', text:'要申込（任意参加）'},
+      {color:'var(--ink-soft)', text:'休み・休校'},
+    ],
+    months: [8],
+    monthLabels: {8:'8月'},
+    data: {
+      8: {
+        days: 31,
+        startWeekday: 6, // 2026-08-01 = 土曜
+        events: {
+          3:{sakura:"18:30〜21:40　中12夏期講習　模試振替"},
+          4:{sakura:"19:30〜21:15　中12夏期講習　短期集中特訓\n※申込いただいた家庭のみ", optional:true},
+          5:{sakura:"19:30〜21:15　中12夏期講習　短期集中特訓\n※申込いただいた家庭のみ", optional:true},
+          6:{sakura:"19:30〜21:15　中12夏期講習　短期集中特訓\n※申込いただいた家庭のみ", optional:true},
+          7:{sakura:"休み（中1の授業なし）", off:true},
+          8:{sakura:"休み（お盆休校・自習室開放なし）", off:true},
+          9:{sakura:"休み（お盆休校・自習室開放なし）", off:true},
+          10:{sakura:"休み（お盆休校・自習室開放なし）", off:true},
+          11:{sakura:"休み（お盆休校・自習室開放なし）", off:true},
+          12:{sakura:"休み（お盆休校・自習室開放なし）", off:true},
+          13:{sakura:"休み（お盆休校・自習室開放なし）", off:true},
+          14:{sakura:"休み（お盆休校・自習室開放なし）", off:true},
+          15:{sakura:"休み（お盆休校・自習室開放なし）", off:true},
+          16:{sakura:"18:55〜21:30　中12夏期補習"},
+        }
+      }
     }
   }
 };
@@ -356,13 +419,53 @@ function getRealToday(){
   return { y: now.getFullYear(), m: now.getMonth()+1, d: now.getDate() };
 }
 const REAL_TODAY = getRealToday();
-let currentMonth = (REAL_TODAY.y===2026 && [7,8,9].includes(REAL_TODAY.m)) ? REAL_TODAY.m : 7;
+
+function defaultMonthFor(personKey){
+  const p = PEOPLE[personKey];
+  if(REAL_TODAY.y===2026 && p.months.includes(REAL_TODAY.m)) return REAL_TODAY.m;
+  return p.months[0];
+}
+
+let currentPerson = 'miori';
+let currentMonth = defaultMonthFor(currentPerson);
+
+function setPerson(key){
+  currentPerson = key;
+  currentMonth = defaultMonthFor(key);
+  document.getElementById('pbtn-miori').classList.toggle('active', key==='miori');
+  document.getElementById('pbtn-haruma').classList.toggle('active', key==='haruma');
+  applyPersonText();
+  renderMonthToggle();
+  renderLegend();
+  render();
+}
+
+function applyPersonText(){
+  const p = PEOPLE[currentPerson];
+  document.getElementById('pageTitle').textContent = p.title;
+  document.getElementById('pageSubtitle').textContent = p.subtitle;
+  document.getElementById('pageFooter').textContent = p.footer;
+}
+
+function renderMonthToggle(){
+  const p = PEOPLE[currentPerson];
+  const wrap = document.getElementById('monthToggle');
+  wrap.innerHTML = p.months.map(m =>
+    `<button class="${m===currentMonth?'active':''}" onclick="setMonth(${m})">${p.monthLabels[m]}</button>`
+  ).join('');
+}
+
+function renderLegend(){
+  const p = PEOPLE[currentPerson];
+  const wrap = document.getElementById('legend');
+  wrap.innerHTML = p.legend.map(item =>
+    `<span><i class="dot" style="background:${item.color}"></i>${item.text}</span>`
+  ).join('');
+}
 
 function setMonth(m){
   currentMonth = m;
-  document.getElementById('btn7').classList.toggle('active', m===7);
-  document.getElementById('btn8').classList.toggle('active', m===8);
-  document.getElementById('btn9').classList.toggle('active', m===9);
+  renderMonthToggle();
   render();
 }
 
@@ -371,6 +474,7 @@ function cellClass(ev){
   if(ev.contest) cls += ' contest';
   else if(ev.camp) cls += ' camp';
   else if(ev.hall) cls += ' hall';
+  else if(ev.optional) cls += ' optional';
   if(ev.off) cls += ' off';
   return cls;
 }
@@ -386,7 +490,7 @@ function badgeFor(ev){
 function render(){
   const wrap = document.getElementById('days');
   wrap.innerHTML = '';
-  const m = DATA[currentMonth];
+  const m = PEOPLE[currentPerson].data[currentMonth];
   for(let i=0;i<m.startWeekday;i++){
     const d = document.createElement('div');
     d.className='day empty';
@@ -415,15 +519,16 @@ function openModal(day, month){
   if(month && month !== currentMonth){
     setMonth(month);
   }
-  const m = DATA[currentMonth];
+  const p = PEOPLE[currentPerson];
+  const m = p.data[currentMonth];
   const ev = m.events[day] || {};
   const weekday = (m.startWeekday + day - 1) % 7;
   const modal = document.getElementById('modal');
 
   let blocks = '';
   if(ev.sakura){
-    const cls = ev.contest ? 'contest' : (ev.camp ? 'camp' : (ev.hall ? 'hall' : ''));
-    blocks += `<div class="block ${cls}"><div class="label">桜（高コンメン）の予定</div><div class="txt">${ev.sakura}</div></div>`;
+    const cls = ev.contest ? 'contest' : (ev.camp ? 'camp' : (ev.hall ? 'hall' : (ev.optional ? 'optional' : '')));
+    blocks += `<div class="block ${cls}"><div class="label">${p.scheduleLabel}</div><div class="txt">${ev.sakura}</div></div>`;
   }
   if(ev.baseball){
     const isCheerDay = ev.sakura && ev.sakura.includes('野球応援');
@@ -431,10 +536,10 @@ function openModal(day, month){
     blocks += `<div class="block"><div class="label">${label}</div><div class="txt">${ev.baseball}</div></div>`;
   }
   if(ev.other){
-    blocks += `<div class="block"><div class="label">担当・備考</div><div class="txt">${ev.other}</div></div>`;
+    blocks += `<div class="block"><div class="label">${p.otherLabel}</div><div class="txt">${ev.other}</div></div>`;
   }
   if(ev.school){
-    blocks += `<div class="block school"><div class="label">学校行事</div><div class="txt">${ev.school}</div></div>`;
+    blocks += `<div class="block school"><div class="label">${p.schoolLabel}</div><div class="txt">${ev.school}</div></div>`;
   }
   if(!blocks){
     blocks = `<div class="empty-msg">この日の記載はありません</div>`;
@@ -457,15 +562,18 @@ function openModal(day, month){
 }
 
 function getAdjacentDay(month, day, delta){
+  const months = PEOPLE[currentPerson].months;
+  const data = PEOPLE[currentPerson].data;
   let newDay = day + delta;
   let newMonth = month;
+  const idx = months.indexOf(month);
   if(newDay < 1){
-    newMonth = month - 1;
-    if(newMonth < 7) newMonth = 9;
-    newDay = DATA[newMonth].days;
-  } else if(newDay > DATA[month].days){
-    newMonth = month + 1;
-    if(newMonth > 9) newMonth = 7;
+    const prevIdx = (idx - 1 + months.length) % months.length;
+    newMonth = months[prevIdx];
+    newDay = data[newMonth].days;
+  } else if(newDay > data[month].days){
+    const nextIdx = (idx + 1) % months.length;
+    newMonth = months[nextIdx];
     newDay = 1;
   }
   return { month: newMonth, day: newDay };
@@ -478,9 +586,9 @@ document.addEventListener('keydown', function(e){
   if(e.key === 'Escape') closeModal();
 });
 
-document.getElementById('btn7').classList.toggle('active', currentMonth===7);
-document.getElementById('btn8').classList.toggle('active', currentMonth===8);
-document.getElementById('btn9').classList.toggle('active', currentMonth===9);
+applyPersonText();
+renderMonthToggle();
+renderLegend();
 render();
 </script>
 </body>
