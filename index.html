@@ -29,6 +29,7 @@
     --kazoku:#4caf6e;
     --kazoku-soft:#eaf7ee;
     --navy:#233255;
+    --holiday:#d6455a;
   }
   *{box-sizing:border-box; min-width:0;}
   html{overflow-x:hidden;}
@@ -112,6 +113,11 @@
   }
   .day.sun .num{color:var(--miori);}
   .day.sat .num{color:var(--haruma);}
+  .day.holiday .num{color:var(--holiday);}
+  .holiday-label{
+    font-size: 7.5px; font-weight:700; color: var(--holiday);
+    line-height:1.2; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+  }
   .day.today{ box-shadow: 0 0 0 2px var(--ink) inset; }
   .day.today .num{ background: var(--ink); color:#fff !important; border-radius:50%; }
   .pill{
@@ -153,6 +159,8 @@
   .block.haruma{ border-left-color: var(--haruma); background: var(--haruma-soft); }
   .block.kazoku{ border-left-color: var(--kazoku); background: var(--kazoku-soft); }
   .block.school{ border-left-color: var(--navy); background:#eef1f7; }
+  .block.holiday{ border-left-color: var(--holiday); background:#fdecee; }
+  .block.holiday .label{ color: var(--holiday); }
   .block .label{
     font-size: 11px; font-weight:800; letter-spacing:.03em; margin-bottom: 4px;
   }
@@ -378,6 +386,13 @@ const PEOPLE = {
 
 const MEMBER_KEYS = ['miori','haruma','kazoku'];
 const MONTHS = [7,8,9];
+
+// 2026年 日本の祝日（7〜9月分）
+const HOLIDAYS = {
+  7: { 20: '海の日' },
+  8: { 11: '山の日' },
+  9: { 21: '敬老の日', 22: '国民の休日', 23: '秋分の日' },
+};
 const MONTH_YEAR = 2026;
 
 function getRealToday(){
@@ -428,8 +443,9 @@ function render(){
   for(let day=1; day<=ref.days; day++){
     const weekday = (ref.startWeekday + day - 1) % 7;
     const isToday = (REAL_TODAY.y===MONTH_YEAR && REAL_TODAY.m===currentMonth && REAL_TODAY.d===day);
+    const holidayName = (HOLIDAYS[currentMonth] || {})[day];
     const cell = document.createElement('div');
-    cell.className = 'day' + (weekday===0?' sun':'') + (weekday===6?' sat':'') + (isToday?' today':'');
+    cell.className = 'day' + (weekday===0?' sun':'') + (weekday===6?' sat':'') + (holidayName?' holiday':'') + (isToday?' today':'');
     cell.onclick = () => openModal(day);
 
     let items = getEventsForDay(day).filter(it => activeMembers[it.key]);
@@ -442,6 +458,7 @@ function render(){
 
     cell.innerHTML = `
       <div class="num">${day}</div>
+      ${holidayName ? `<div class="holiday-label">${holidayName}</div>` : ''}
       ${pillsHtml}
       ${moreHtml}
     `;
@@ -479,6 +496,10 @@ function openModal(day, month){
   const modal = document.getElementById('modal');
 
   let blocks = '';
+  const holidayName = (HOLIDAYS[currentMonth] || {})[day];
+  if(holidayName){
+    blocks += `<div class="block holiday"><div class="label">祝日</div><div class="txt">${holidayName}</div></div>`;
+  }
   MEMBER_KEYS.forEach(key=>{
     if(!activeMembers[key]) return;
     const person = PEOPLE[key];
