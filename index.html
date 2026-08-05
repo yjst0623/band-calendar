@@ -3,153 +3,117 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>美織・春馬 スケジュール 2026</title>
+<title>美織・春馬 カレンダー</title>
 <style>
   :root{
     --paper:#f6f3ec;
-    --staff:#e4ddc9;
     --ink:#232733;
     --ink-soft:#5b5f6b;
-    --sakura:#c96b8a;
-    --sakura-deep:#a5486a;
-    --brass:#b08d57;
-    --brass-deep:#8a6a38;
-    --baseball:#4f7ea8;
-    --baseball-deep:#3c6488;
-    --burgundy:#7a2e2e;
-    --navy:#233255;
-    --leaf:#4f6d4f;
     --card:#ffffff;
-    --line:#ddd6c3;
+    --line:#e3ddd0;
     --shadow: 0 8px 24px rgba(35,39,51,0.08);
+    --miori:#f0609a;
+    --miori-soft:#fdedf4;
+    --haruma:#3e9be0;
+    --haruma-soft:#eaf5fd;
+    --kazoku:#4caf6e;
+    --kazoku-soft:#eaf7ee;
+    --navy:#233255;
   }
   *{box-sizing:border-box; min-width:0;}
   html{overflow-x:hidden;}
   body{
     margin:0;
     overflow-x:hidden;
-    background:
-      repeating-linear-gradient(180deg, transparent 0 39px, var(--staff) 39px 40px),
-      var(--paper);
-    font-family: "Hiragino Mincho ProN","Yu Mincho", serif;
+    background: var(--paper);
+    font-family: "Hiragino Kaku Gothic ProN","Hiragino Sans", sans-serif;
     color:var(--ink);
-    padding: 20px 10px 50px;
+    padding: 16px 10px 50px;
   }
   .wrap{max-width:920px;margin:0 auto; width:100%;}
-  header{ text-align:center; margin-bottom: 14px; }
-  header .clef{
-    font-size: 34px; color: var(--sakura-deep); display:block; margin-bottom:2px;
-  }
+  header{ text-align:center; margin-bottom: 12px; }
   h1{
-    font-size: clamp(19px, 4.5vw, 28px);
-    letter-spacing: .03em; margin: 0; color: var(--navy); font-weight: 700;
+    font-size: clamp(17px, 4vw, 22px);
+    margin: 0; color: var(--ink); font-weight: 800;
   }
   .sub{
-    font-family: "Hiragino Kaku Gothic ProN", sans-serif;
-    font-size: 12.5px; color: var(--ink-soft); margin-top: 6px;
+    font-size: 11.5px; color: var(--ink-soft); margin-top: 4px;
   }
-  .person-toggle{
-    display:flex; justify-content:center; gap:10px; margin: 18px 0 14px;
-    font-family: "Hiragino Kaku Gothic ProN", sans-serif;
+
+  .month-nav{
+    display:flex; align-items:center; justify-content:center; gap:18px;
+    margin: 16px 0 12px;
   }
-  .person-toggle button{
-    border: 1.5px solid var(--navy); background: var(--card); color: var(--navy);
-    padding: 9px 20px; border-radius: 999px; font-size: 14.5px; font-weight:700;
-    cursor:pointer; transition: all .15s ease;
+  .month-nav button{
+    width:36px; height:36px; border-radius:50%; border:1px solid var(--line);
+    background:var(--card); color:var(--ink); font-size:16px; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    box-shadow: var(--shadow);
   }
-  .person-toggle button.active{ background: var(--navy); border-color: var(--navy); color: #fff; }
-  .month-toggle{
-    display:flex; justify-content:center; gap:10px; margin: 0 0 14px;
-    font-family: "Hiragino Kaku Gothic ProN", sans-serif;
+  .month-nav button:active{ transform: scale(.94); }
+  .month-label{ font-size:17px; font-weight:800; min-width:120px; text-align:center; }
+
+  .member-toggle{
+    display:flex; justify-content:center; gap:8px; margin-bottom: 14px;
   }
-  .month-toggle button{
-    border: 1.5px solid var(--sakura); background: var(--card); color: var(--navy);
-    padding: 8px 22px; border-radius: 999px; font-size: 14px; font-weight:600;
-    cursor:pointer; transition: all .15s ease;
+  .chip{
+    display:flex; align-items:center; gap:6px;
+    border:1.5px solid var(--line); background:var(--card); color:var(--ink-soft);
+    padding: 7px 14px; border-radius:999px; font-size:13px; font-weight:700;
+    cursor:pointer; transition: all .15s ease; opacity:.5;
   }
-  .month-toggle button.active{ background: var(--sakura-deep); border-color: var(--sakura-deep); color: #fff; }
-  .legend{
-    font-family: "Hiragino Kaku Gothic ProN", sans-serif;
-    display:flex; flex-wrap:wrap; justify-content:center; gap: 8px 14px;
-    font-size: 11.5px; color: var(--ink-soft); margin-bottom: 16px;
-  }
-  .legend span{display:flex;align-items:center;gap:5px;}
-  .dot{width:9px;height:9px;border-radius:50%;display:inline-block;flex-shrink:0;}
+  .chip.on{ opacity:1; color:#fff; }
+  .chip.miori.on{ background:var(--miori); border-color:var(--miori); }
+  .chip.haruma.on{ background:var(--haruma); border-color:var(--haruma); }
+  .chip.kazoku.on{ background:var(--kazoku); border-color:var(--kazoku); }
+  .chip .dot{ width:9px; height:9px; border-radius:50%; background:currentColor; display:inline-block; flex-shrink:0; }
+  .chip.miori:not(.on) .dot{ background:var(--miori); }
+  .chip.haruma:not(.on) .dot{ background:var(--haruma); }
+  .chip.kazoku:not(.on) .dot{ background:var(--kazoku); }
+  .chip.on .dot{ background:#fff; }
+
   .grid{
     background: var(--card); border-radius: 14px; box-shadow: var(--shadow);
     padding: 8px; border: 1px solid var(--line); width:100%; overflow:hidden;
   }
   .weekdays{
     display:grid; grid-template-columns: repeat(7, minmax(0,1fr));
-    font-family:"Hiragino Kaku Gothic ProN", sans-serif; font-size: 11px;
-    color: var(--ink-soft); margin-bottom: 6px;
+    font-size: 11px; color: var(--ink-soft); margin-bottom: 6px;
   }
-  .weekdays div{text-align:center;padding:4px 0;font-weight:600;}
-  .weekdays div:first-child{color:var(--burgundy);}
-  .weekdays div:last-child{color:var(--navy);}
+  .weekdays div{text-align:center;padding:4px 0;font-weight:700;}
+  .weekdays div:first-child{color:var(--miori);}
+  .weekdays div:last-child{color:var(--haruma);}
   .days{ display:grid; grid-template-columns: repeat(7, minmax(0,1fr)); gap: 3px; width:100%; }
   .day{
-    min-height: 70px;
+    min-height: 82px;
     min-width: 0;
     overflow: hidden;
-    border: 1px solid var(--line); border-radius: 7px; padding: 4px 3px 5px;
+    border: 1px solid var(--line); border-radius: 8px; padding: 4px 3px 4px;
     cursor:pointer; background: #fffdf9;
     transition: transform .1s ease, box-shadow .1s ease;
-    display:flex; flex-direction:column; position:relative;
+    display:flex; flex-direction:column; gap:2px; position:relative;
   }
   .day:hover{ transform: translateY(-1px); box-shadow: 0 4px 10px rgba(35,39,51,.10); }
   .day.empty{ background:transparent; border:none; cursor:default; }
   .day.empty:hover{ transform:none; box-shadow:none; }
   .day .num{
-    font-family:"Hiragino Kaku Gothic ProN", sans-serif; font-size: 12.5px; font-weight:700; color: var(--ink);
-    width:20px; height:20px; line-height:20px; text-align:center;
+    font-size: 11.5px; font-weight:800; color: var(--ink);
+    width:18px; height:18px; line-height:18px; text-align:center;
   }
-  .day.sun .num{color:var(--burgundy);}
-  .day.sat .num{color:var(--navy);}
-  .day.today{ box-shadow: 0 0 0 2px var(--sakura-deep) inset; background: #fdf1f5; }
-  .day.today .num{
-    background: var(--sakura-deep);
-    color:#fff !important;
-    border-radius:50%;
+  .day.sun .num{color:var(--miori);}
+  .day.sat .num{color:var(--haruma);}
+  .day.today{ box-shadow: 0 0 0 2px var(--ink) inset; }
+  .day.today .num{ background: var(--ink); color:#fff !important; border-radius:50%; }
+  .pill{
+    font-size: 8.3px; font-weight:700; line-height:1.25;
+    padding: 1.5px 4px; border-radius: 5px; color:#fff;
+    overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
   }
-  .day .practice{
-    margin-top: 3px;
-    font-family:"Hiragino Kaku Gothic ProN", sans-serif;
-    font-size: 9.5px;
-    font-weight: 600;
-    color: var(--sakura-deep);
-    line-height:1.3;
-    overflow-wrap:anywhere;
-    word-break:break-all;
-    display:-webkit-box;
-    -webkit-line-clamp:4;
-    -webkit-box-orient:vertical;
-    overflow:hidden;
-  }
-  .day .badge{
-    margin-top: 2px;
-    font-family:"Hiragino Kaku Gothic ProN", sans-serif;
-    font-size: 8px;
-    font-weight:700;
-    display:inline-block;
-    padding: 1px 4px;
-    border-radius: 999px;
-    color:#fff;
-    max-width:100%;
-    overflow:hidden;
-    text-overflow:ellipsis;
-    white-space:nowrap;
-  }
-  .day.off .practice{ color: var(--ink-soft); font-weight:500; }
-  .day.contest{ background: linear-gradient(180deg,#fbeceb,#fffdf9 60%); border-color: var(--burgundy); }
-  .day.camp{ background: linear-gradient(180deg,#eef3ec,#fffdf9 60%); border-color: var(--leaf); }
-  .day.hall{ background: linear-gradient(180deg,#fbf3e3,#fffdf9 60%); border-color: var(--brass); }
-  .day.optional{ background: linear-gradient(180deg,#fbf3e3,#fffdf9 60%); border-color: var(--brass); }
-  .badge.contest{background:var(--burgundy);}
-  .badge.camp{background:var(--leaf);}
-  .badge.hall{background:var(--brass-deep);}
-  .badge.optional{background:var(--brass-deep);}
-  .badge.baseball{background:var(--baseball-deep);}
+  .pill.miori{ background: var(--miori); }
+  .pill.haruma{ background: var(--haruma); }
+  .pill.kazoku{ background: var(--kazoku); }
+  .pill.off{ background:#c8c3b6; color:#5b5f6b; }
+  .more{ font-size:7.8px; color:var(--ink-soft); padding-left:2px; }
 
   .overlay{
     position:fixed; inset:0; background: rgba(35,39,51,.45);
@@ -168,65 +132,47 @@
     background:#f1ede4;border:none;
     font-size:22px;color:var(--ink-soft);cursor:pointer;
     border-radius:50%;
-    z-index:10;
-    -webkit-tap-highlight-color: rgba(0,0,0,0.1);
   }
-  .modal h2{ margin:0 0 3px; font-size: 19px; color:var(--navy); }
-  .modal .wd{ font-family:"Hiragino Kaku Gothic ProN", sans-serif; font-size: 12px; color: var(--ink-soft); margin-bottom: 14px; }
+  .modal h2{ margin:0 0 3px; font-size: 19px; color:var(--ink); }
+  .modal .wd{ font-size: 12px; color: var(--ink-soft); margin-bottom: 14px; }
   .block{
-    font-family:"Hiragino Kaku Gothic ProN", sans-serif; margin-bottom: 12px;
-    padding: 10px 12px; border-radius: 10px; background: #fbeef1; border-left: 3px solid var(--sakura-deep);
+    margin-bottom: 12px;
+    padding: 10px 12px; border-radius: 10px; border-left: 4px solid var(--ink);
   }
-  .block.contest{ border-left-color: var(--burgundy); background:#fbf0ef; }
-  .block.camp{ border-left-color: var(--leaf); background:#f1f5ef; }
-  .block.hall{ border-left-color: var(--brass); background:#fbf3e3; }
-  .block.optional{ border-left-color: var(--brass); background:#fbf3e3; }
+  .block.miori{ border-left-color: var(--miori); background: var(--miori-soft); }
+  .block.haruma{ border-left-color: var(--haruma); background: var(--haruma-soft); }
+  .block.kazoku{ border-left-color: var(--kazoku); background: var(--kazoku-soft); }
   .block.school{ border-left-color: var(--navy); background:#eef1f7; }
   .block .label{
-    font-size: 10.5px; font-weight:700; letter-spacing:.05em; color: var(--ink-soft);
-    margin-bottom: 3px; text-transform:uppercase;
+    font-size: 11px; font-weight:800; letter-spacing:.03em; margin-bottom: 4px;
   }
+  .block.miori .label{ color: var(--miori); }
+  .block.haruma .label{ color: var(--haruma); }
+  .block.kazoku .label{ color: var(--kazoku); }
   .block .txt{ font-size: 13.5px; line-height:1.6; color: var(--ink); white-space:pre-line; }
-  .empty-msg{ font-family:"Hiragino Kaku Gothic ProN", sans-serif; font-size: 13px; color: var(--ink-soft); text-align:center; padding: 10px 0; }
-  .day-nav{
-    display:flex; justify-content:space-between; gap:8px;
-    margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--line);
-  }
-  .nav-btn{
-    flex:1;
-    font-family:"Hiragino Kaku Gothic ProN", sans-serif;
-    font-size: 13px; font-weight:600;
-    padding: 10px 8px;
-    border-radius: 10px;
-    border: 1.5px solid var(--sakura);
-    background: #fff;
-    color: var(--sakura-deep);
-    cursor:pointer;
-    -webkit-tap-highlight-color: rgba(0,0,0,0.1);
-  }
-  .nav-btn:active{ background: var(--sakura); color:#fff; }
+  .empty-msg{ font-size: 13px; color: var(--ink-soft); text-align:center; padding: 10px 0; }
   footer{
-    text-align:center; margin-top: 24px; font-family:"Hiragino Kaku Gothic ProN", sans-serif;
-    font-size: 11px; color: var(--ink-soft); line-height:1.7;
+    text-align:center; margin-top: 20px; font-size: 11px; color: var(--ink-soft); line-height:1.7;
   }
 </style>
 </head>
 <body>
 <div class="wrap">
   <header>
-    <span class="clef">𝄞</span>
-    <h1 id="pageTitle">桜（高コンメン）スケジュール</h1>
-    <div class="sub" id="pageSubtitle">※桜（高校コンサートメンバー）の部活動予定を中心に表示</div>
+    <h1>美織・春馬 カレンダー</h1>
   </header>
 
-  <div class="person-toggle">
-    <button id="pbtn-miori" class="active" onclick="setPerson('miori')">姉：美織（吹奏楽部）</button>
-    <button id="pbtn-haruma" onclick="setPerson('haruma')">弟：春馬（塾）</button>
+  <div class="month-nav">
+    <button onclick="changeMonth(-1)">‹</button>
+    <div class="month-label" id="monthLabel"></div>
+    <button onclick="changeMonth(1)">›</button>
   </div>
 
-  <div class="month-toggle" id="monthToggle"></div>
-
-  <div class="legend" id="legend"></div>
+  <div class="member-toggle">
+    <button class="chip miori on" id="chip-miori" onclick="toggleMember('miori')"><i class="dot"></i>美織</button>
+    <button class="chip haruma on" id="chip-haruma" onclick="toggleMember('haruma')"><i class="dot"></i>春馬</button>
+    <button class="chip kazoku on" id="chip-kazoku" onclick="toggleMember('kazoku')"><i class="dot"></i>家族</button>
+  </div>
 
   <div class="grid">
     <div class="weekdays">
@@ -235,8 +181,8 @@
     <div class="days" id="days"></div>
   </div>
 
-  <footer id="pageFooter">
-    学校行事や他グループ（藤・若芽）の予定は、日付をタップすると確認できます。
+  <footer>
+    日付をタップすると、その日の美織・春馬それぞれの予定を詳しく確認できます。
   </footer>
 </div>
 
@@ -245,159 +191,135 @@
 </div>
 
 <script>
-// 人物ごとにデータ・見た目のラベルをまとめる
 const PEOPLE = {
   miori: {
-    title: '桜（高コンメン）スケジュール',
-    subtitle: '※桜（高校コンサートメンバー）の部活動予定を中心に表示',
-    footer: '学校行事や他グループ（藤・若芽）の予定は、日付をタップすると確認できます。',
-    scheduleLabel: '桜（高コンメン）の予定',
-    otherLabel: '担当・備考',
-    schoolLabel: '学校行事',
-    legend: [
-      {color:'var(--burgundy)', text:'コンクール本番'},
-      {color:'var(--leaf)', text:'合宿'},
-      {color:'var(--brass)', text:'ホール練習'},
-      {color:'var(--baseball)', text:'野球応援'},
-      {color:'var(--ink-soft)', text:'休み'},
-    ],
-    months: [7,8,9],
-    monthLabels: {7:'7月',8:'8月',9:'9月'},
+    label: '美織（吹奏楽部）',
+    color: 'var(--miori)',
     data: {
       7: {
         days: 31,
-        startWeekday: 3, // 2026-07-01 = 水曜
+        startWeekday: 3,
         events: {
-          1:{school:"", sakura:"試験休み", off:true},
-          2:{school:"", sakura:"試験休み", off:true},
+          1:{sakura:"試験休み", off:true},
+          2:{sakura:"試験休み", off:true},
           3:{school:"期末試験", sakura:"試験休み", off:true},
           4:{school:"期末試験", sakura:"試験休み", off:true},
-          5:{school:"", sakura:"休み", off:true},
+          5:{sakura:"休み", off:true},
           6:{school:"期末試験", sakura:"試験休み", off:true},
           7:{school:"期末試験／語学研修説明会", sakura:"12:30〜15:30"},
           8:{school:"［高］実力テスト　高1〜12:50頃／高2〜14:20頃", sakura:"14:30〜17:00（高2はHRが終わり次第参加）\n★16〜17時応援の合同練習＠中講堂"},
-          9:{school:"", sakura:"休み（自主練可 9:00〜12:00）", off:true},
+          9:{sakura:"休み（自主練可 9:00〜12:00）", off:true},
           10:{school:"答案返却日、中1講演会〜12:30頃", sakura:"11:30〜15:30（12:30〜13:30はお昼）", other:"レッスン：Euph＋Tub 13:30〜／Hr(新保さん) PM／Ob 13:30〜"},
           11:{school:"［高］特進プログラム　高1 9:30〜12:00？、高2 13:00〜15:30？", sakura:"15:30〜17:30（13:00〜自主練可）", other:"北田C、金井C、厚地C、Flレッスン PM", baseball:"野球［2回戦］相模原球場9:00開始→吹部応援なし"},
-          12:{school:"", sakura:"合同練習（AMのみ）", other:"金井C（大庭中学校・御所見中学校）＠中講堂"},
-          13:{school:"", sakura:"13:00〜16:00", other:"Cbレッスン 12:30〜15:30"},
-          14:{school:"", sakura:"野球応援（芝・森）", baseball:"野球［3回戦］等々力球場9:00開始"},
+          12:{sakura:"合同練習（AMのみ）", other:"金井C（大庭中学校・御所見中学校）＠中講堂"},
+          13:{sakura:"13:00〜16:00", other:"Cbレッスン 12:30〜15:30"},
+          14:{sakura:"野球応援（芝・森）", baseball:"野球［3回戦］等々力球場9:00開始"},
           15:{school:"三者面談", sakura:"休み（★Percのコンメンのみ、AMにレッスンあり）", off:true},
           16:{school:"三者面談／日大相談会", sakura:"13:00〜16:00", baseball:"野球［4回戦］相模原球場11:30開始"},
           17:{school:"三者面談", sakura:"9:00〜14:00"},
           18:{school:"終業式・大掃除", sakura:"野球応援（三）", baseball:"野球［5回戦］保土ヶ谷球場11:30開始"},
           19:{school:"語学研修（中〜8/3）", sakura:"13:00〜16:00", other:"北田C、厚地C"},
           20:{school:"語学研修（中〜7/30）", sakura:"9:00〜14:00", other:"北田C、Tbレッスン 10:00〜"},
-          21:{school:"夏季休暇／［中］特別補習", sakura:"ホール練習　＠寒川町 町民センター（1日練）", hall:true, other:"北田C、金井C"},
+          21:{school:"夏季休暇／［中］特別補習", sakura:"ホール練習　＠寒川町 町民センター（1日練）", other:"北田C、金井C", hall:true},
           22:{school:"［中］特別補習", sakura:"9:00〜14:00", baseball:"野球［準々決勝］横浜スタジアム11:30開始"},
-          23:{school:"［中］特別補習", sakura:"★コンクール本番　湘南吹奏楽コンクール［高B］\n2番目/9団体　＠茅ヶ崎市民文化会館\nステージ演奏14:41頃／開場14:00・開演14:30\n表彰16:54〜17:09（搬入13:36〜13:56、誘導開始14:21、ステージ袖14:36）", contest:true, other:"北田C、金井C"},
+          23:{school:"［中］特別補習", sakura:"★コンクール本番　湘南吹奏楽コンクール［高B］\n2番目/9団体　＠茅ヶ崎市民文化会館\nステージ演奏14:41頃／開場14:00・開演14:30\n表彰16:54〜17:09（搬入13:36〜13:56、誘導開始14:21、ステージ袖14:36）", other:"北田C、金井C", contest:true},
           24:{school:"［中］特別補習", sakura:"コンクール補助役員あり（20名）／野球応援", baseball:"野球［準決勝］横浜スタジアム11:30開始"},
           25:{school:"AMオープンスクール", sakura:"補助役員あり（10名）／中Bコンクール鑑賞", other:"北田C、金井C、厚地C（若芽＝中Bはこの日コンクール本番）"},
-          26:{school:"", sakura:"野球応援／休み", off:true, baseball:"野球［決勝］横浜スタジアム14:00開始"},
+          26:{sakura:"野球応援／休み", baseball:"野球［決勝］横浜スタジアム14:00開始", off:true},
           27:{school:"［中］特別補習", sakura:"休み", off:true},
-          28:{school:"", sakura:"休み", off:true},
+          28:{sakura:"休み", off:true},
           29:{school:"中2　登校日", sakura:"休み", off:true},
           30:{school:"中2　林間学校（〜8/2）", sakura:"9:00〜12:00（県大会がある場合）／休み"},
-          31:{school:"", sakura:"9:00〜12:00（県大会がある場合）／休み"},
+          31:{sakura:"9:00〜12:00（県大会がある場合）／休み"},
         }
       },
       8: {
         days: 31,
-        startWeekday: 6, // 2026-08-01 = 土曜
+        startWeekday: 6,
         events: {
-          1:{school:"", sakura:"9:00〜12:00", other:"木管分奏レッスン"},
+          1:{sakura:"9:00〜12:00", other:"木管分奏レッスン"},
           2:{school:"〜中2　林間学校", sakura:"休み", off:true},
           3:{school:"〜中　語学研修", sakura:"9:00〜12:00", other:"金管、Sax、Cl、Flレッスン"},
-          4:{school:"", sakura:"9:00〜14:00（合宿準備含む）"},
-          5:{school:"", sakura:"合宿1日目（三富荘）\n7:45　学校集合（8:00 トラック配車、8:30 バス配車）", camp:true},
-          6:{school:"", sakura:"合宿（三富荘）", camp:true},
-          7:{school:"", sakura:"合宿（三富荘）", camp:true},
-          8:{school:"", sakura:"合宿最終日（三富荘）\n16:00　学校到着→楽器積み下ろし、17:00頃解散予定", camp:true},
-          9:{school:"", sakura:"休み", off:true},
-          10:{school:"", sakura:"ホール練習　＠ひらしん平塚文化センター（1日練）", hall:true},
-          11:{school:"", sakura:"9:00〜14:00"},
-          12:{school:"", sakura:"9:00〜14:00"},
+          4:{sakura:"9:00〜14:00（合宿準備含む）"},
+          5:{sakura:"合宿1日目（三富荘）\n7:45　学校集合（8:00 トラック配車、8:30 バス配車）", camp:true},
+          6:{sakura:"合宿（三富荘）", camp:true},
+          7:{sakura:"合宿（三富荘）", camp:true},
+          8:{sakura:"合宿最終日（三富荘）\n16:00　学校到着→楽器積み下ろし、17:00頃解散予定", camp:true},
+          9:{sakura:"休み", off:true},
+          10:{sakura:"ホール練習　＠ひらしん平塚文化センター（1日練）", hall:true},
+          11:{sakura:"9:00〜14:00"},
+          12:{sakura:"9:00〜14:00"},
           13:{school:"高校　神奈川県吹奏楽コンクール（横浜みなとみらいホール）", sakura:"★コンクール本番　神奈川県吹奏楽コンクール［高B］\n28番目/33団体　＠横浜みなとみらいホール\nステージ演奏16:20頃", contest:true},
-          14:{school:"", sakura:"夏休み", off:true},
-          15:{school:"", sakura:"夏休み", off:true},
-          16:{school:"", sakura:"夏休み", off:true},
-          17:{school:"", sakura:"夏休み", off:true},
+          14:{sakura:"夏休み", off:true},
+          15:{sakura:"夏休み", off:true},
+          16:{sakura:"夏休み", off:true},
+          17:{sakura:"夏休み", off:true},
           18:{school:"学校見学ツアー（PM）", sakura:"休み", off:true},
           19:{school:"学校見学ツアー（AM）", sakura:"休み", off:true},
           20:{school:"高　特別補習・特進講習・夏季講習、漢字検定", sakura:"14:00〜17:00（自主練なし）"},
           21:{school:"高　特別補習・特進講習・夏季講習", sakura:"14:00〜17:00（自主練なし）"},
           22:{school:"オープンスクール(AM)／学校見学ツアー(PM)", sakura:"休み", off:true},
-          23:{school:"", sakura:"休み", off:true},
+          23:{sakura:"休み", off:true},
           24:{school:"高　特別補習・特進講習・夏季講習", sakura:"14:00〜17:00（自主練なし）"},
           25:{school:"中　特別授業(全員)／高　特別補習・特進講習・夏季講習", sakura:"14:00〜17:00（自主練なし）"},
           26:{school:"中　特別授業(全員)／高　特別補習・特進講習・夏季講習", sakura:"14:00〜17:00（自主練なし）"},
           27:{school:"中　特別授業(全員)／高　特別補習・特進講習・夏季講習", sakura:"14:00〜17:00（自主練なし）"},
           28:{school:"中　特別授業(全員)／高　特別補習・特進講習・夏季講習", sakura:"14:00〜17:00（自主練なし）"},
           29:{school:"中　特別授業(全員)／高　特別補習・特進講習・夏季講習", sakura:"休み（東関東大会進出の場合、コンクールメンバーは練習あり）", off:true},
-          30:{school:"", sakura:"休み", off:true},
-          31:{school:"", sakura:"休み（東関東大会進出の場合、コンクールメンバーは練習あり）", off:true},
+          30:{sakura:"休み", off:true},
+          31:{sakura:"休み（東関東大会進出の場合、コンクールメンバーは練習あり）", off:true},
         }
       },
       9: {
         days: 30,
-        startWeekday: 2, // 2026-09-01 = 火曜
+        startWeekday: 2,
         events: {
           1:{school:"始業式\n高2，3年小論文テスト", sakura:"練習あり"},
           2:{school:"実力テスト、基礎学模試", sakura:"練習あり"},
-          3:{school:"", sakura:"休み", off:true},
-          4:{school:"", sakura:"15:50〜18:00"},
-          5:{school:"", sakura:"14:00〜17:00"},
-          6:{school:"", sakura:"休み", off:true},
-          7:{school:"", sakura:"15:50〜18:00"},
-          8:{school:"", sakura:"15:50〜18:00"},
-          9:{school:"", sakura:"休み", off:true},
-          10:{school:"", sakura:"15:50〜18:00"},
+          3:{sakura:"休み", off:true},
+          4:{sakura:"15:50〜18:00"},
+          5:{sakura:"14:00〜17:00"},
+          6:{sakura:"休み", off:true},
+          7:{sakura:"15:50〜18:00"},
+          8:{sakura:"15:50〜18:00"},
+          9:{sakura:"休み", off:true},
+          10:{sakura:"15:50〜18:00"},
           11:{school:"高校生徒会長・副会長選挙", sakura:"15:50〜18:00"},
           12:{school:"高2、中3保護者会", sakura:"14:00〜17:00\n★東関東吹奏楽コンクール（進出の場合）\n＠水戸市民会館［高B］", contest:true},
-          13:{school:"", sakura:"休み", off:true},
-          14:{school:"", sakura:"15:50〜18:00"},
-          15:{school:"", sakura:"15:50〜18:00"},
-          16:{school:"", sakura:"15:50〜18:00"},
+          13:{sakura:"休み", off:true},
+          14:{sakura:"15:50〜18:00"},
+          15:{sakura:"15:50〜18:00"},
+          16:{sakura:"15:50〜18:00"},
           17:{school:"生徒総会", sakura:"休み", off:true},
-          18:{school:"", sakura:"15:50〜18:00"},
+          18:{sakura:"15:50〜18:00"},
           19:{school:"2限まで授業、大掃除、基礎学準備", sakura:"13:30〜15:30（予定）"},
-          20:{school:"", sakura:"休み", off:true},
+          20:{sakura:"休み", off:true},
           21:{school:"敬老の日", sakura:"アンコン組練習（午前）"},
           22:{school:"国民の休日", sakura:"9:00〜12:00"},
           23:{school:"秋分の日", sakura:"9:00〜12:00"},
           24:{school:"高3基礎学力テスト", sakura:"休み", off:true},
           25:{school:"高1高大連携教育", sakura:"15:50〜18:00"},
           26:{school:"高1講演会、保護者会（午前）、英検1次", sakura:"14:00〜17:00"},
-          27:{school:"", sakura:"アンサンブル＆ソロ発表会"},
-          28:{school:"", sakura:"休み", off:true},
-          29:{school:"", sakura:"15:50〜18:00（高2試験休み）"},
-          30:{school:"", sakura:"15:50〜18:00（高2試験休み）"},
+          27:{sakura:"アンサンブル＆ソロ発表会"},
+          28:{sakura:"休み", off:true},
+          29:{sakura:"15:50〜18:00（高2試験休み）"},
+          30:{sakura:"15:50〜18:00（高2試験休み）"},
         }
-      }
+      },
     }
   },
   haruma: {
-    title: '春馬　塾スケジュール（中1）',
-    subtitle: '※中1（中1・2合同クラス）の授業のみ掲載。他の学年・講座は表示していません',
-    footer: '塾から配信される「今週の通塾予定」をもとに随時更新します。日付をタップすると詳細を確認できます。',
-    scheduleLabel: '春馬（塾）の予定',
-    otherLabel: '備考',
-    schoolLabel: '学校行事',
-    legend: [
-      {color:'var(--brass)', text:'要申込（任意参加）'},
-      {color:'var(--ink-soft)', text:'休み・休校'},
-    ],
-    months: [8],
-    monthLabels: {8:'8月'},
+    label: '春馬（塾・中1）',
+    color: 'var(--haruma)',
     data: {
       8: {
         days: 31,
-        startWeekday: 6, // 2026-08-01 = 土曜
+        startWeekday: 6,
         events: {
           3:{sakura:"18:30〜21:40　中12夏期講習　模試振替"},
-          4:{sakura:"19:30〜21:15　中12夏期講習　短期集中特訓\n※申込いただいた家庭のみ", optional:true},
-          5:{sakura:"19:30〜21:15　中12夏期講習　短期集中特訓\n※申込いただいた家庭のみ", optional:true},
-          6:{sakura:"19:30〜21:15　中12夏期講習　短期集中特訓\n※申込いただいた家庭のみ", optional:true},
+          4:{sakura:"19:30〜21:15　中12夏期講習　短期集中特訓\n※申込いただいた家庭のみ"},
+          5:{sakura:"19:30〜21:15　中12夏期講習　短期集中特訓\n※申込いただいた家庭のみ"},
+          6:{sakura:"19:30〜21:15　中12夏期講習　短期集中特訓\n※申込いただいた家庭のみ"},
           7:{sakura:"休み（中1の授業なし）", off:true},
           8:{sakura:"休み（お盆休校・自習室開放なし）", off:true},
           9:{sakura:"休み（お盆休校・自習室開放なし）", off:true},
@@ -411,103 +333,92 @@ const PEOPLE = {
         }
       }
     }
+  },
+  kazoku: {
+    label: '家族の予定',
+    color: 'var(--kazoku)',
+    data: {
+      8: {
+        days: 31,
+        startWeekday: 6,
+        events: {
+          15:{sakura:"長野"},
+          16:{sakura:"長野"},
+          17:{sakura:"長野"},
+        }
+      }
+    }
   }
 };
+
+const MEMBER_KEYS = ['miori','haruma','kazoku'];
+const MONTHS = [7,8,9];
+const MONTH_YEAR = 2026;
 
 function getRealToday(){
   const now = new Date();
   return { y: now.getFullYear(), m: now.getMonth()+1, d: now.getDate() };
 }
 const REAL_TODAY = getRealToday();
+let currentMonth = (REAL_TODAY.y===MONTH_YEAR && MONTHS.includes(REAL_TODAY.m)) ? REAL_TODAY.m : MONTHS[0];
 
-function defaultMonthFor(personKey){
-  const p = PEOPLE[personKey];
-  if(REAL_TODAY.y===2026 && p.months.includes(REAL_TODAY.m)) return REAL_TODAY.m;
-  return p.months[0];
-}
+let activeMembers = { miori:true, haruma:true, kazoku:true };
 
-let currentPerson = 'miori';
-let currentMonth = defaultMonthFor(currentPerson);
-
-function setPerson(key){
-  currentPerson = key;
-  currentMonth = defaultMonthFor(key);
-  document.getElementById('pbtn-miori').classList.toggle('active', key==='miori');
-  document.getElementById('pbtn-haruma').classList.toggle('active', key==='haruma');
-  applyPersonText();
-  renderMonthToggle();
-  renderLegend();
+function toggleMember(key){
+  activeMembers[key] = !activeMembers[key];
+  document.getElementById('chip-'+key).classList.toggle('on', activeMembers[key]);
   render();
 }
 
-function applyPersonText(){
-  const p = PEOPLE[currentPerson];
-  document.getElementById('pageTitle').textContent = p.title;
-  document.getElementById('pageSubtitle').textContent = p.subtitle;
-  document.getElementById('pageFooter').textContent = p.footer;
-}
-
-function renderMonthToggle(){
-  const p = PEOPLE[currentPerson];
-  const wrap = document.getElementById('monthToggle');
-  wrap.innerHTML = p.months.map(m =>
-    `<button class="${m===currentMonth?'active':''}" onclick="setMonth(${m})">${p.monthLabels[m]}</button>`
-  ).join('');
-}
-
-function renderLegend(){
-  const p = PEOPLE[currentPerson];
-  const wrap = document.getElementById('legend');
-  wrap.innerHTML = p.legend.map(item =>
-    `<span><i class="dot" style="background:${item.color}"></i>${item.text}</span>`
-  ).join('');
-}
-
-function setMonth(m){
-  currentMonth = m;
-  renderMonthToggle();
+function changeMonth(delta){
+  const idx = MONTHS.indexOf(currentMonth);
+  currentMonth = MONTHS[(idx + delta + MONTHS.length) % MONTHS.length];
   render();
 }
 
-function cellClass(ev){
-  let cls = '';
-  if(ev.contest) cls += ' contest';
-  else if(ev.camp) cls += ' camp';
-  else if(ev.hall) cls += ' hall';
-  else if(ev.optional) cls += ' optional';
-  if(ev.off) cls += ' off';
-  return cls;
-}
-
-function badgeFor(ev){
-  if(ev.contest) return '<span class="badge contest">本番</span>';
-  if(ev.camp) return '<span class="badge camp">合宿</span>';
-  if(ev.hall) return '<span class="badge hall">ホール練習</span>';
-  if(ev.sakura && ev.sakura.includes('野球応援')) return '<span class="badge baseball">野球応援</span>';
-  return '';
+function getEventsForDay(day){
+  const items = [];
+  MEMBER_KEYS.forEach(key=>{
+    const person = PEOPLE[key];
+    const monthData = person.data[currentMonth];
+    if(!monthData) return;
+    const ev = monthData.events[day];
+    if(!ev || !ev.sakura) return;
+    items.push({ key, person, ev });
+  });
+  return items;
 }
 
 function render(){
+  document.getElementById('monthLabel').textContent = MONTH_YEAR + '年 ' + currentMonth + '月';
   const wrap = document.getElementById('days');
   wrap.innerHTML = '';
-  const m = PEOPLE[currentPerson].data[currentMonth];
-  for(let i=0;i<m.startWeekday;i++){
+  // いずれかにその月のデータがあれば日数・開始曜日を採用（美織を基準に、なければ他を参照）
+  const ref = PEOPLE.miori.data[currentMonth] || PEOPLE.haruma.data[currentMonth] || PEOPLE.kazoku.data[currentMonth];
+  for(let i=0;i<ref.startWeekday;i++){
     const d = document.createElement('div');
     d.className='day empty';
     wrap.appendChild(d);
   }
-  for(let day=1; day<=m.days; day++){
-    const ev = m.events[day] || {};
-    const weekday = (m.startWeekday + day - 1) % 7;
+  for(let day=1; day<=ref.days; day++){
+    const weekday = (ref.startWeekday + day - 1) % 7;
+    const isToday = (REAL_TODAY.y===MONTH_YEAR && REAL_TODAY.m===currentMonth && REAL_TODAY.d===day);
     const cell = document.createElement('div');
-    const isToday = (REAL_TODAY.y===2026 && REAL_TODAY.m===currentMonth && REAL_TODAY.d===day);
-    cell.className = 'day' + (weekday===0?' sun':'') + (weekday===6?' sat':'') + cellClass(ev) + (isToday?' today':'');
+    cell.className = 'day' + (weekday===0?' sun':'') + (weekday===6?' sat':'') + (isToday?' today':'');
     cell.onclick = () => openModal(day);
-    const practiceShort = (ev.sakura || '').split("\n")[0];
+
+    let items = getEventsForDay(day).filter(it => activeMembers[it.key]);
+    const maxShow = 3;
+    let pillsHtml = items.slice(0,maxShow).map(it=>{
+      const firstLine = it.ev.sakura.split("\n")[0];
+      return `<div class="pill ${it.key}${it.ev.off?' off':''}">${firstLine}</div>`;
+    }).join('');
+    const moreHtml = items.length>maxShow ? `<div class="more">+${items.length-maxShow}件</div>` : '';
+
     cell.innerHTML = `
       <div class="num">${day}</div>
-      <div class="practice">${practiceShort}</div>
-      ${badgeFor(ev)}
+      ${pillsHtml}
+      ${moreHtml}
     `;
     wrap.appendChild(cell);
   }
@@ -515,68 +426,44 @@ function render(){
 
 const weekdayNames = ['日','月','火','水','木','金','土'];
 
-function openModal(day, month){
-  if(month && month !== currentMonth){
-    setMonth(month);
-  }
-  const p = PEOPLE[currentPerson];
-  const m = p.data[currentMonth];
-  const ev = m.events[day] || {};
-  const weekday = (m.startWeekday + day - 1) % 7;
+function openModal(day){
+  const ref = PEOPLE.miori.data[currentMonth] || PEOPLE.haruma.data[currentMonth] || PEOPLE.kazoku.data[currentMonth];
+  const weekday = (ref.startWeekday + day - 1) % 7;
   const modal = document.getElementById('modal');
 
   let blocks = '';
-  if(ev.sakura){
-    const cls = ev.contest ? 'contest' : (ev.camp ? 'camp' : (ev.hall ? 'hall' : (ev.optional ? 'optional' : '')));
-    blocks += `<div class="block ${cls}"><div class="label">${p.scheduleLabel}</div><div class="txt">${ev.sakura}</div></div>`;
-  }
-  if(ev.baseball){
-    const isCheerDay = ev.sakura && ev.sakura.includes('野球応援');
-    const label = isCheerDay ? '野球応援・大会情報' : '参考：野球部の試合日程（この日、桜は応援ではありません）';
-    blocks += `<div class="block"><div class="label">${label}</div><div class="txt">${ev.baseball}</div></div>`;
-  }
-  if(ev.other){
-    blocks += `<div class="block"><div class="label">${p.otherLabel}</div><div class="txt">${ev.other}</div></div>`;
-  }
-  if(ev.school){
-    blocks += `<div class="block school"><div class="label">${p.schoolLabel}</div><div class="txt">${ev.school}</div></div>`;
-  }
+  MEMBER_KEYS.forEach(key=>{
+    if(!activeMembers[key]) return;
+    const person = PEOPLE[key];
+    const monthData = person.data[currentMonth];
+    const ev = monthData ? monthData.events[day] : null;
+    if(!ev) return;
+    if(ev.sakura){
+      blocks += `<div class="block ${key}"><div class="label">${person.label}</div><div class="txt">${ev.sakura}</div></div>`;
+    }
+    if(ev.baseball){
+      const isCheerDay = ev.sakura && ev.sakura.includes('野球応援');
+      const label = isCheerDay ? '野球応援・大会情報' : '参考：野球部の試合日程';
+      blocks += `<div class="block"><div class="label">${label}</div><div class="txt">${ev.baseball}</div></div>`;
+    }
+    if(ev.other){
+      blocks += `<div class="block"><div class="label">担当・備考</div><div class="txt">${ev.other}</div></div>`;
+    }
+    if(ev.school){
+      blocks += `<div class="block school"><div class="label">学校行事</div><div class="txt">${ev.school}</div></div>`;
+    }
+  });
   if(!blocks){
     blocks = `<div class="empty-msg">この日の記載はありません</div>`;
   }
-
-  const prevInfo = getAdjacentDay(currentMonth, day, -1);
-  const nextInfo = getAdjacentDay(currentMonth, day, 1);
 
   modal.innerHTML = `
     <button class="close" onclick="closeModal()">×</button>
     <h2>${currentMonth}月${day}日</h2>
     <div class="wd">${weekdayNames[weekday]}曜日</div>
     ${blocks}
-    <div class="day-nav">
-      <button class="nav-btn" onclick="openModal(${prevInfo.day}, ${prevInfo.month})">← 前の日</button>
-      <button class="nav-btn" onclick="openModal(${nextInfo.day}, ${nextInfo.month})">次の日 →</button>
-    </div>
   `;
   document.getElementById('overlay').classList.add('show');
-}
-
-function getAdjacentDay(month, day, delta){
-  const months = PEOPLE[currentPerson].months;
-  const data = PEOPLE[currentPerson].data;
-  let newDay = day + delta;
-  let newMonth = month;
-  const idx = months.indexOf(month);
-  if(newDay < 1){
-    const prevIdx = (idx - 1 + months.length) % months.length;
-    newMonth = months[prevIdx];
-    newDay = data[newMonth].days;
-  } else if(newDay > data[month].days){
-    const nextIdx = (idx + 1) % months.length;
-    newMonth = months[nextIdx];
-    newDay = 1;
-  }
-  return { month: newMonth, day: newDay };
 }
 
 function closeModal(){
@@ -586,9 +473,6 @@ document.addEventListener('keydown', function(e){
   if(e.key === 'Escape') closeModal();
 });
 
-applyPersonText();
-renderMonthToggle();
-renderLegend();
 render();
 </script>
 </body>
