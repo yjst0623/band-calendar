@@ -151,6 +151,21 @@
   .block.kazoku .label{ color: var(--kazoku); }
   .block .txt{ font-size: 13.5px; line-height:1.6; color: var(--ink); white-space:pre-line; }
   .empty-msg{ font-size: 13px; color: var(--ink-soft); text-align:center; padding: 10px 0; }
+  .day-nav{
+    display:flex; justify-content:space-between; gap:8px;
+    margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--line);
+  }
+  .nav-btn{
+    flex:1;
+    font-size: 13px; font-weight:700;
+    padding: 10px 8px;
+    border-radius: 10px;
+    border: 1.5px solid var(--line);
+    background: #fff;
+    color: var(--ink);
+    cursor:pointer;
+  }
+  .nav-btn:active{ background: var(--paper); }
   footer{
     text-align:center; margin-top: 20px; font-size: 11px; color: var(--ink-soft); line-height:1.7;
   }
@@ -426,7 +441,29 @@ function render(){
 
 const weekdayNames = ['日','月','火','水','木','金','土'];
 
-function openModal(day){
+function refFor(month){
+  return PEOPLE.miori.data[month] || PEOPLE.haruma.data[month] || PEOPLE.kazoku.data[month];
+}
+
+function getAdjacentDay(month, day, delta){
+  let newDay = day + delta;
+  let newMonth = month;
+  const idx = MONTHS.indexOf(month);
+  if(newDay < 1){
+    newMonth = MONTHS[(idx - 1 + MONTHS.length) % MONTHS.length];
+    newDay = refFor(newMonth).days;
+  } else if(newDay > refFor(month).days){
+    newMonth = MONTHS[(idx + 1) % MONTHS.length];
+    newDay = 1;
+  }
+  return { month: newMonth, day: newDay };
+}
+
+function openModal(day, month){
+  if(month && month !== currentMonth){
+    currentMonth = month;
+    render();
+  }
   const ref = PEOPLE.miori.data[currentMonth] || PEOPLE.haruma.data[currentMonth] || PEOPLE.kazoku.data[currentMonth];
   const weekday = (ref.startWeekday + day - 1) % 7;
   const modal = document.getElementById('modal');
@@ -457,11 +494,18 @@ function openModal(day){
     blocks = `<div class="empty-msg">この日の記載はありません</div>`;
   }
 
+  const prevInfo = getAdjacentDay(currentMonth, day, -1);
+  const nextInfo = getAdjacentDay(currentMonth, day, 1);
+
   modal.innerHTML = `
     <button class="close" onclick="closeModal()">×</button>
     <h2>${currentMonth}月${day}日</h2>
     <div class="wd">${weekdayNames[weekday]}曜日</div>
     ${blocks}
+    <div class="day-nav">
+      <button class="nav-btn" onclick="openModal(${prevInfo.day}, ${prevInfo.month})">← 前の日</button>
+      <button class="nav-btn" onclick="openModal(${nextInfo.day}, ${nextInfo.month})">次の日 →</button>
+    </div>
   `;
   document.getElementById('overlay').classList.add('show');
 }
