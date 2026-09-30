@@ -353,7 +353,7 @@ const PEOPLE = {
           8:{sakura:"試験休み", off:true},
           9:{sakura:"試験休み", off:true},
           10:{sakura:"試験休み", off:true},
-          11:{sakura:"東日本学校吹奏楽大会", contest:true},
+          11:{sakura:"休み", off:true},
           12:{school:"スポーツの日", sakura:"試験休み", off:true},
           13:{sakura:"中間試験", off:true},
           14:{sakura:"中間試験", off:true},
@@ -367,13 +367,49 @@ const PEOPLE = {
           22:{sakura:"休み（自主練可）", off:true},
           23:{school:"体育祭打ち合わせ", sakura:"15:50〜18:00"},
           24:{sakura:"14:00〜17:00"},
-          25:{sakura:"休み（31日が演奏会の場合は練習の可能性あり）", off:true},
+          25:{sakura:"9:00〜14:00（ゲネプロ）"},
           26:{sakura:"15:50〜18:00"},
           27:{school:"体育祭予行", sakura:"（練習あり？）"},
-          28:{school:"高校体育祭", sakura:"高校体育祭　開会式＋部活動対抗リレーで演奏", contest:true},
+          28:{school:"高校体育祭", sakura:"高校体育祭　開会式＋部活動対抗リレーで演奏", other:"詳細は後日連絡", contest:true},
           29:{school:"中学体育祭", sakura:"中学体育祭　開会式で演奏", contest:true},
           30:{school:"体育祭予備日", sakura:"15:50〜18:00"},
-          31:{school:"45分授業×4限、学校説明会", sakura:"校内演奏会　16時頃開演予定（11/14または11/28へずれる可能性あり）", other:"入試説明会に合わせて毎年実施しています。吹部保護者もご鑑賞いただけます。"},
+          31:{school:"45分授業×4限、入試説明会", sakura:"校内演奏会（詳細は後日連絡）", other:"入試説明会に合わせて毎年実施しています。吹部保護者もご鑑賞いただけます。"},
+        }
+      },
+      11: {
+        days: 30,
+        startWeekday: 0, // 2026-11-01 = 日曜
+        events: {
+          1:{sakura:"休み", off:true},
+          2:{school:"実力テスト(中学AMで終了)", sakura:"15:40〜17:30（高2は終わり次第参加）"},
+          3:{school:"文化の日", sakura:"9:00〜12:00"},
+          4:{sakura:"15:50〜17:30"},
+          5:{sakura:"休み（自主練可）", off:true},
+          6:{sakura:"15:50〜17:30"},
+          7:{school:"特待生奨学生賞状授与式", sakura:"14:00〜17:00"},
+          8:{sakura:"休み／アンコン？", off:true},
+          9:{school:"防災訓練・大掃除", sakura:"15:50〜17:30"},
+          10:{school:"(中)授業参観・保護者会", sakura:"15:50〜17:30"},
+          11:{sakura:"15:50〜17:30"},
+          12:{school:"芸術鑑賞会(中高1・2年)", sakura:"休み", off:true},
+          13:{sakura:"15:50〜17:30"},
+          14:{school:"45分授業×4限、入試説明会", sakura:"13:30〜16:30"},
+          15:{sakura:"休み", off:true},
+          16:{sakura:"15:50〜17:30"},
+          17:{sakura:"15:50〜17:30"},
+          18:{sakura:"15:50〜17:30"},
+          19:{sakura:"休み", off:true},
+          20:{sakura:"15:50〜17:30"},
+          21:{sakura:"14:00〜17:00"},
+          22:{sakura:"休み", off:true},
+          23:{school:"勤労感謝の日", sakura:"9:00〜12:00"},
+          24:{sakura:"15:50〜17:30"},
+          25:{sakura:"15:50〜17:30"},
+          26:{sakura:"休み", off:true},
+          27:{sakura:"15:50〜17:30"},
+          28:{school:"45分授業×4限、入試説明会", sakura:"試験休み", off:true},
+          29:{sakura:"試験休み", off:true},
+          30:{sakura:"試験休み", off:true},
         }
       },
     }
@@ -491,7 +527,7 @@ const PEOPLE = {
 };
 
 const MEMBER_KEYS = ['miori','haruma','kazoku'];
-const MONTHS = [7,8,9,10];
+const MONTHS = [7,8,9,10,11];
 
 // 2026年 日本の祝日（7〜9月分）
 const HOLIDAYS = {
