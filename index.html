@@ -128,6 +128,7 @@
   .pill.miori{ background: var(--miori); }
   .pill.haruma{ background: var(--haruma); }
   .pill.kazoku{ background: var(--kazoku); }
+  .pill.haruma.school{ background:#fff; color: var(--haruma); box-shadow: inset 0 0 0 1px var(--haruma); }
   .pill.off{ opacity:.55; }
   .more{ font-size:7.8px; color:var(--ink-soft); padding-left:2px; }
 
@@ -417,6 +418,7 @@ const PEOPLE = {
   haruma: {
     label: '春馬（塾・中1）',
     color: 'var(--haruma)',
+    schoolInGrid: true, // 白鳥中の学校行事もグリッドに白抜きピルで表示
     data: {
       8: {
         days: 31,
@@ -501,10 +503,81 @@ const PEOPLE = {
           6:{sakura:"19:00〜21:40　中1・2理社"},
           7:{sakura:"休み（中1の授業なし）", off:true},
           8:{sakura:"休み（中1の授業なし）", off:true},
-          9:{sakura:"19:10〜21:30　中1・2英数国"},
+          9:{school:"前期終業式・しらとり祭（給食なし）", sakura:"19:10〜21:30　中1・2英数国"},
           10:{sakura:"13:30〜15:00　中1・2保護者説明会"},
           11:{sakura:"休み（中1の授業なし）", off:true},
           12:{sakura:"休み（終日閉校）", off:true},
+          13:{school:"休み（かわさきホリデイ＆スタディ）"},
+          14:{school:"後期始業式・文化祭通しリハーサル"},
+          15:{school:"文化祭前日準備"},
+          16:{school:"白翔祭 文化祭の部・学校オープンデー"},
+          28:{school:"連合文化祭（給食なし）"},
+        }
+      },
+      11: {
+        days: 30,
+        startWeekday: 0,
+        events: {
+          10:{school:"1年自然教室 保護者説明会（予定）"},
+          19:{school:"小中連携（小学生授業体験）（給食なし）"},
+          20:{school:"ギネス大会・学校オープンデー"},
+        }
+      },
+      12: {
+        days: 31,
+        startWeekday: 2,
+        events: {
+          2:{school:"学校オープンデー"},
+          3:{school:"テスト5日前・部活動停止"},
+          4:{school:"1・2年放課後学習会"},
+          7:{school:"1・2年放課後学習会"},
+          8:{school:"後期中間テスト1（給食なし）"},
+          9:{school:"後期中間テスト2"},
+          18:{school:"希望制個人面談1（4時間授業）"},
+          21:{school:"希望制個人面談2（4時間授業）"},
+          22:{school:"希望制個人面談3（4時間授業）"},
+          23:{school:"冬季休業前 授業最終日（給食なし）"},
+          24:{school:"冬季休業（〜1/5）"},
+          28:{school:"部活停止（〜1/5）"},
+        }
+      },
+      1: {
+        days: 31,
+        startWeekday: 5,
+        events: {
+          6:{school:"授業開始（4時間授業・給食なし）"},
+          7:{school:"1年自然教室 前日指導（給食なし）"},
+          8:{school:"1年自然教室1日目"},
+          9:{school:"1年自然教室2日目"},
+          10:{school:"1年自然教室3日目"},
+          12:{school:"1年振替休日"},
+          13:{school:"1年振替休日"},
+          14:{school:"学校オープンデー"},
+        }
+      },
+      2: {
+        days: 28,
+        startWeekday: 1,
+        events: {
+          10:{school:"学校オープンデー"},
+          12:{school:"テスト5日前・部活動停止"},
+          16:{school:"1・2年放課後学習会"},
+          17:{school:"学年末テスト1（給食なし）"},
+          18:{school:"学年末テスト2"},
+        }
+      },
+      3: {
+        days: 31,
+        startWeekday: 1,
+        events: {
+          5:{school:"1年学年懇談会・学習室懇談会"},
+          10:{school:"卒業式（給食なし）"},
+          12:{school:"学校オープンデー"},
+          19:{school:"事務作業日（給食なし）"},
+          23:{school:"給食なし"},
+          24:{school:"1・2年個人写真撮影 候補日？（給食なし）"},
+          25:{school:"修了式・離退任式（給食なし）"},
+          26:{school:"年度末休業（〜3/31）"},
         }
       }
     }
@@ -535,22 +608,28 @@ const PEOPLE = {
 };
 
 const MEMBER_KEYS = ['miori','haruma','kazoku'];
-const MONTHS = [7,8,9,10,11];
+const MONTHS = [7,8,9,10,11,12,1,2,3];
 
-// 2026年 日本の祝日（7〜9月分）
+// 日本の祝日（2026年7月〜2027年3月）
 const HOLIDAYS = {
   7: { 20: '海の日' },
   8: { 11: '山の日' },
   9: { 21: '敬老の日', 22: '国民の休日', 23: '秋分の日' },
+  10: { 12: 'スポーツの日' },
+  11: { 3: '文化の日', 23: '勤労感謝の日' },
+  1: { 1: '元日', 11: '成人の日' },
+  2: { 11: '建国記念の日', 23: '天皇誕生日' },
+  3: { 21: '春分の日', 22: '振替休日' },
 };
-const MONTH_YEAR = 2026;
+// 年度表示：4〜12月は2026年、1〜3月は2027年
+function yearOf(month){ return month >= 4 ? 2026 : 2027; }
 
 function getRealToday(){
   const now = new Date();
   return { y: now.getFullYear(), m: now.getMonth()+1, d: now.getDate() };
 }
 const REAL_TODAY = getRealToday();
-let currentMonth = (REAL_TODAY.y===MONTH_YEAR && MONTHS.includes(REAL_TODAY.m)) ? REAL_TODAY.m : MONTHS[0];
+let currentMonth = (MONTHS.includes(REAL_TODAY.m) && REAL_TODAY.y===yearOf(REAL_TODAY.m)) ? REAL_TODAY.m : MONTHS[0];
 
 let activeMembers = { miori:true, haruma:true, kazoku:true };
 
@@ -573,14 +652,15 @@ function getEventsForDay(day){
     const monthData = person.data[currentMonth];
     if(!monthData) return;
     const ev = monthData.events[day];
-    if(!ev || !ev.sakura) return;
-    items.push({ key, person, ev });
+    if(!ev) return;
+    if(ev.sakura) items.push({ key, person, ev, text: ev.sakura });
+    if(person.schoolInGrid && ev.school) items.push({ key, person, ev:{}, text: ev.school, school: true });
   });
   return items;
 }
 
 function render(){
-  document.getElementById('monthLabel').textContent = MONTH_YEAR + '年 ' + currentMonth + '月';
+  document.getElementById('monthLabel').textContent = yearOf(currentMonth) + '年 ' + currentMonth + '月';
   const wrap = document.getElementById('days');
   wrap.innerHTML = '';
   // いずれかにその月のデータがあれば日数・開始曜日を採用（美織を基準に、なければ他を参照）
@@ -592,7 +672,7 @@ function render(){
   }
   for(let day=1; day<=ref.days; day++){
     const weekday = (ref.startWeekday + day - 1) % 7;
-    const isToday = (REAL_TODAY.y===MONTH_YEAR && REAL_TODAY.m===currentMonth && REAL_TODAY.d===day);
+    const isToday = (REAL_TODAY.y===yearOf(currentMonth) && REAL_TODAY.m===currentMonth && REAL_TODAY.d===day);
     const holidayName = (HOLIDAYS[currentMonth] || {})[day];
     const cell = document.createElement('div');
     cell.className = 'day' + (weekday===0?' sun':'') + (weekday===6?' sat':'') + (holidayName?' holiday':'') + (isToday?' today':'');
@@ -601,8 +681,8 @@ function render(){
     let items = getEventsForDay(day).filter(it => activeMembers[it.key]);
     const maxShow = 3;
     let pillsHtml = items.slice(0,maxShow).map(it=>{
-      const firstLine = it.ev.sakura.split("\n")[0];
-      return `<div class="pill ${it.key}${it.ev.off?' off':''}">${firstLine}</div>`;
+      const firstLine = it.text.split("\n")[0];
+      return `<div class="pill ${it.key}${it.school?' school':''}${it.ev.off?' off':''}">${firstLine}</div>`;
     }).join('');
     const moreHtml = items.length>maxShow ? `<div class="more">+${items.length-maxShow}件</div>` : '';
 
