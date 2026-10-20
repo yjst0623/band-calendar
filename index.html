@@ -365,16 +365,16 @@ const PEOPLE = {
           19:{school:"振替休日", sakura:"15:50〜18:00"},
           20:{sakura:"15:50〜18:00"},
           21:{sakura:"15:50〜18:00"},
-          22:{sakura:"休み（自主練可）", off:true},
+          22:{school:"第1回文理選択調査 提出（期日厳守）", sakura:"休み（自主練可）", off:true},
           23:{school:"体育祭打ち合わせ", sakura:"15:50〜18:00"},
           24:{sakura:"14:00〜17:00"},
           25:{sakura:"9:00〜14:00（ゲネプロ）"},
           26:{sakura:"15:50〜18:00"},
-          27:{school:"体育祭予行", sakura:"（練習あり？）"},
-          28:{school:"高校体育祭", sakura:"高校体育祭　開会式＋部活動対抗リレーで演奏", other:"詳細は後日連絡", contest:true},
-          29:{school:"中学体育祭", sakura:"中学体育祭　開会式で演奏", contest:true},
-          30:{school:"体育祭予備日", sakura:"15:50〜18:00"},
-          31:{school:"45分授業×4限、入試説明会", sakura:"校内演奏会（詳細は後日連絡）", other:"入試説明会に合わせて毎年実施しています。吹部保護者もご鑑賞いただけます。"},
+          27:{school:"体育祭予行・準備\n12:00〜登校／12:30 HR＠NFG待機席／15:35 予行終了予定", sakura:"（練習あり？）"},
+          28:{school:"高校体育祭\n8:30 HR＠NFG待機席／15:30 終了予定", sakura:"高校体育祭　開会式＋部活動対抗リレーで演奏", other:"詳細は後日連絡", contest:true},
+          29:{school:"家庭学習日（中学体育祭）", sakura:"中学体育祭　開会式で演奏", contest:true},
+          30:{school:"通常授業（体育祭予備日）", sakura:"15:50〜18:00"},
+          31:{school:"45分授業×4限（12:20終了）、入試説明会", sakura:"校内演奏会（詳細は後日連絡）", other:"入試説明会に合わせて毎年実施しています。吹部保護者もご鑑賞いただけます。"},
         }
       },
       11: {
@@ -382,19 +382,19 @@ const PEOPLE = {
         startWeekday: 0, // 2026-11-01 = 日曜
         events: {
           1:{sakura:"休み", off:true},
-          2:{school:"実力テスト(中学AMで終了)", sakura:"15:40〜17:30（高2は終わり次第参加）"},
+          2:{school:"実力テスト（昼食持参、14:30頃終了予定）", sakura:"15:40〜17:30（高2は終わり次第参加）"},
           3:{school:"文化の日", sakura:"9:00〜12:00"},
           4:{sakura:"15:50〜17:30"},
           5:{sakura:"休み（自主練可）", off:true},
           6:{sakura:"15:50〜17:30"},
           7:{school:"特待生奨学生賞状授与式", sakura:"14:00〜17:00"},
           8:{sakura:"休み／アンコン？", off:true},
-          9:{school:"防災訓練・大掃除", sakura:"15:50〜17:30"},
+          9:{school:"通常授業、防災訓練（火災・地震）・大掃除", sakura:"15:50〜17:30"},
           10:{school:"(中)授業参観・保護者会", sakura:"15:50〜17:30"},
           11:{sakura:"15:50〜17:30"},
-          12:{school:"芸術鑑賞会(中高1・2年)", sakura:"休み", off:true},
+          12:{school:"芸術鑑賞会（校内、ゴスペル）\n高1は9:10〜登校／10:10 HR＠各教室／10:30〜12:00 鑑賞", sakura:"休み", off:true},
           13:{sakura:"15:50〜17:30"},
-          14:{school:"45分授業×4限、入試説明会", sakura:"13:30〜16:30"},
+          14:{school:"45分授業×4限（12:20終了）、入試説明会", sakura:"13:30〜16:30"},
           15:{sakura:"休み", off:true},
           16:{sakura:"15:50〜17:30"},
           17:{sakura:"15:50〜17:30"},
@@ -408,9 +408,19 @@ const PEOPLE = {
           25:{sakura:"15:50〜17:30"},
           26:{sakura:"休み", off:true},
           27:{sakura:"15:50〜17:30"},
-          28:{school:"45分授業×4限、入試説明会", sakura:"試験休み", off:true},
+          28:{school:"45分授業×4限（12:20終了）、入試説明会", sakura:"試験休み", off:true},
           29:{sakura:"試験休み", off:true},
           30:{sakura:"試験休み", off:true},
+        }
+      },
+      12: {
+        days: 31,
+        startWeekday: 2, // 2026-12-01 = 火曜
+        events: {
+          5:{school:"期末試験", sakura:"期末試験", off:true},
+          7:{school:"期末試験", sakura:"期末試験", off:true},
+          8:{school:"期末試験", sakura:"期末試験", off:true},
+          9:{school:"期末試験", sakura:"期末試験", off:true},
         }
       },
     }
